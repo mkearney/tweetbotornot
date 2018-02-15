@@ -1,14 +1,8 @@
-## read in the data (train and test)
-train <- readRDS("train.rds")
-test <- readRDS("test.rds")
-
-botornot <- list(train = train, test = test)
-setwd("R")
-save(botnotbot, file = "sysdat.rda")
 
 
-train_data <- function() botnotbot$train
-test_data <- function() botnotbot$test
+
+train_data <- function() botornot$train
+test_data <- function() botornot$test
 
 ## feature extraction
 
@@ -55,8 +49,7 @@ sex_est_m <- function(x) {
 extract_features <- function(data) {
   data <- sex_matches(data)
   ## mutate 9 total features
-  data %>%
-    dplyr::mutate(
+  data <- dplyr::mutate(data,
       ## your new variables should go below here
       bio_chars = nchar(description),
       loc_chars = nchar(location),
@@ -66,9 +59,9 @@ extract_features <- function(data) {
       tweets_to_followers = (statuses_count + 1) / (followers_count + 1),
       statuses_rate = statuses_count / years,
       ## i added one here so it wouldn't return NaN or undefined values (0 / x)
-      ff_ratio = (followers_count + 1) / (friends_count + followers_count + 1)) %>%
-    ## return only numeric variables
-    dplyr::select_if(is_num)
+      ff_ratio = (followers_count + 1) / (friends_count + followers_count + 1))
+  ## return only numeric variables
+  dplyr::select_if(data, is_num)
 }
 
 
@@ -100,16 +93,15 @@ percent_correct <- function(data, m, n_trees = 500) {
   pc <- as.character(pc * 100)
   message(sprintf("Overall, the model was correct %s%% of the time.", pc))
 }
-library(magrittr)
 
-## apply function to training and test data sets
-ftrain <- extract_features(train_data())
-ftest <- extract_features(test_data())
-
-m1 <- train_model(ftrain)
-
-percent_correct(ftrain, m1)
-
-ftest$pred <- predict(m1, newdata = ftest, n.trees = 1000,
-  type = "response")
-percent_correct(ftest, m1)
+#' classify data
+#'
+#' Generate predicted probabilities of observations being bots.
+#'
+#' @param x New data on which to apply botornot model.
+#' @return Vector of predictions expressed as probabilities of accounts being
+#'   bots.
+#' @export
+classify_data <- function(x) {
+  predict(botornot_model, newdata = x, type = "response")
+}

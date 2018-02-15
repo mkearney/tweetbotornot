@@ -1,9 +1,12 @@
-Package: botnotbot
-Title: What the Package Does (one line, title case)
+Package: botornot
+Title: Classifies Twitter users as bots or not bots
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Michael", "Kearney", email = "kearneymw@missouri.edu", role = c("aut", "cre"))
+Description: Classifies Twitter users as bots or not bots.
 Depends: R (>= 3.4.3)
-License: What license is it under?
+License: MIT
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.0.1.9000
+Imports: 
+    tibble
