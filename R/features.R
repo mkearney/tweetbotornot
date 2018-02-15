@@ -61,7 +61,7 @@ extract_features <- function(data) {
       ## i added one here so it wouldn't return NaN or undefined values (0 / x)
       ff_ratio = (followers_count + 1) / (friends_count + followers_count + 1))
   ## return only numeric variables
-  dplyr::select_if(data, is_num)
+  data[vap_lgl(data, ~ is.numeric(.) | is.integer(.)) | names(data) == "user_id"]
 }
 
 
@@ -103,5 +103,5 @@ percent_correct <- function(data, m, n_trees = 500) {
 #'   bots.
 #' @export
 classify_data <- function(x) {
-  predict(botornot_model, newdata = x, type = "response")
+  gbm::predict.gbm(botornot_model, n.trees = 500, newdata = x, type = "response")
 }

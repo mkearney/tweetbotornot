@@ -41,14 +41,6 @@ botornot.character <- function(x) {
   x <- rtweet_join(x)
   ## remove duplicate users
   x <- x[!duplicated(x$user_id), ]
-  ## extract features
-  x <- extract_features(x)
-  ## classify data
-  p <- classify_data(x)
-  ## match positions
-  o <- match(x$user_id, x_)
-  ## preserve NAs and match p values
-  o[!is.na(o)] <- p[!is.na(o)]
-  ## return output
-  o
+  ## pass to next method
+  botornot(x)
 }

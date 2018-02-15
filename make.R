@@ -18,14 +18,22 @@ library(magrittr)
 
 ## apply function to training and test data sets
 ftrain <- extract_features(botornot_train)
-rm_.DS_Store()
 ftest <- extract_features(botornot_test)
 
+save(ftrain, file = "data/ftrain.rda")
+save(ftest, file = "data/fterst.rda")
 
-m1 <- train_model(ftrain)
+botornot_model2 <- train_model(rbind(ftrain, ftest))
+botornot_model <- botornot_model2
 
-percent_correct(ftrain, m1)
+save(botornot_model, file = "data/botornot_model.rda")
 
-ftest$pred <- predict(m1, newdata = ftest, n.trees = 1000,
-  type = "response")
-percent_correct(ftest, m1)
+percent_correct(ftrain, botornot_model)
+percent_correct(ftest, botornot_model)
+
+percent_correct(ftrain, botornot_model2)
+percent_correct(ftest, botornot_model2)
+
+rt <- rtweet::lookup_users(c("kearneymw", "cstonehoops"))
+
+botornot(c("kearneymw", "cstonehoops", "cnn", "realdonaldtrump"))
