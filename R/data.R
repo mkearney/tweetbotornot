@@ -35,7 +35,6 @@
 #' botornot_test
 "botornot_train"
 
-
 #' @rdname botornot_data
 "botornot_test"
 
