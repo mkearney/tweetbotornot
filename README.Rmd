@@ -29,7 +29,7 @@ devtools::install_github("mkearney/botornot")
 
 ## Usage
 
-There's one function `botornot()`. Give it a vector of screen names, user IDs, or data frames returned by [http://rtweet.info](rtweet).
+There's one function `botornot()`. Give it a vector of screen names, user IDs, or data frames returned by [rtweet](http://rtweet.info).
 
 ```{r}
 ## load package

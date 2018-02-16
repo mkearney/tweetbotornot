@@ -24,7 +24,7 @@ devtools::install_github("mkearney/botornot")
 Usage
 -----
 
-There's one function `botornot()`. Give it a vector of screen names, user IDs, or data frames returned by [http://rtweet.info](rtweet).
+There's one function `botornot()`. Give it a vector of screen names, user IDs, or data frames returned by [rtweet](http://rtweet.info).
 
 ``` r
 ## load package
@@ -48,5 +48,5 @@ data[order(data$prob_bot), ]
 ## 4       ma_salmon 0.094190686
 ## 6       dataandme 0.503423779
 ## 1     netflix_bot 0.982314113
-## 8 tidyversetweets 0.984276889
+## 8 tidyversetweets 0.983066201
 ```
