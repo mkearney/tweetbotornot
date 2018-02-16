@@ -8,11 +8,17 @@ knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
 
 ## botornot
 
-An R package for classifying Twitter accounts as `bot` or `not_bot`.
+An R package for classifying Twitter accounts as `bot or not`.
+
+## Features
+
+Uses machine learning to classify Twitter accounts as bots or not bots. 
+The model is 94% accurate. It is slightly better at classifying not bots than 
+classifying bots (low type I error).
 
 ## Install
 
-Install from Github
+Install from Github.
 
 ```{r, eval=FALSE}
 if (!requireNamespace("devtools", quietly = TRUE)) {
@@ -22,6 +28,8 @@ devtools::install_github("mkearney/botornot")
 ```
 
 ## Usage
+
+There's one function `botornot()`. Give it a vector of screen names, user IDs, or data frames returned by [http://rtweet.info](rtweet).
 
 ```{r}
 ## load package
