@@ -1,3 +1,6 @@
 .Rproj.user
 .Rhistory
 .RData
+make.R
+data/botornot_test.rda
+data/botornot_train.rda

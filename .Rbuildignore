@@ -1,3 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^make\.R$
+^data\/botornot_test\.rda
+^data\/botornot_train\.rda

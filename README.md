@@ -20,12 +20,26 @@ Usage
 -----
 
 ``` r
-## identify Twitter users
-rt <- rtweet::search_tweets("#rstats", n = 100, include_rts = FALSE)
+## load package
+library(botornot)
 
-## supply user IDs (or screen names) to `botornot()` function
-rt$pbot <- botornot(rt$user_id)
+## select users
+users <- c("realdonaldtrump", "netflix_bot",
+  "kearneymw", "dataandme", "hadleywickham",
+  "ma_salmon", "juliasilge", "tidyversetweets")
 
-## for faster results, supply data as returned by 
-dplyr::select(rt, screen_name, pbot)
+## get botornot estimates
+data <- botornot(users)
+
+## arrange by prob ests
+data[order(data$prob_bot), ]
+##              user    prob_bot
+## 7   hadleywickham 0.005798216
+## 3 realDonaldTrump 0.006464292
+## 5       kearneymw 0.080821327
+## 2      juliasilge 0.081998433
+## 4       ma_salmon 0.087341763
+## 6       dataandme 0.482836007
+## 1     netflix_bot 0.982314113
+## 8 tidyversetweets 0.983468770
 ```
