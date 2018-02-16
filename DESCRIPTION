@@ -1,6 +1,6 @@
 Package: botornot
 Title: Classifies Twitter users as bots or not bots
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: person("Michael", "Kearney", email = "kearneymw@missouri.edu", role = c("aut", "cre"))
 Description: Classifies Twitter users as bots or not bots.
 Depends: R (>= 3.4.3)
@@ -10,4 +10,5 @@ LazyData: true
 RoxygenNote: 6.0.1.9000
 Imports: 
     gbm,
+    rtweet,
     tibble
