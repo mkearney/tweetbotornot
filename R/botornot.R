@@ -17,16 +17,25 @@ botornot.data.frame <- function(x) {
   x <- rtweet_join(x)
   ## remove duplicate users
   x <- x[!duplicated(x$user_id), ]
+  ## store screen names
+  sn <- x$screen_name
   ## extract any misssing features
   x <- extract_features(x)
   ## classify data
   p <- classify_data(x)
+  data.frame(user = sn, prob_bot = p)
   ## match positions
-  o <- match(x$user_id, x_)
+  #o <- match(x$user_id, x_)
   ## preserve NAs and match p values
-  o[!is.na(o)] <- p[!is.na(o)]
+  #o[!is.na(o)] <- p[!is.na(o)]
   ## return output
-  o
+  #o
+}
+
+#' @export
+botornot.factor <- function(x) {
+  x <- as.character(x)
+  botornot(x)
 }
 
 #' @export
