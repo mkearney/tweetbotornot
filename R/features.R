@@ -99,7 +99,7 @@ n_caps <- function(x) {
 
 extract_features <- function(data) {
   data <- rtweet_join(data)
-  data <- data[names(data) %in% c("retweet_favorite_count")]
+  data <- data[!names(data) %in% c("retweet_favorite_count")]
   ##data <- sex_matches(data)
   ## mutate 9 total features
   data <- dplyr::mutate(data,
