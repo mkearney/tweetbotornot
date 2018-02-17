@@ -46,41 +46,60 @@ is_num <- function(x) is.numeric(x) | is.integer(x)
 # }
 
 n_words <- function(x) {
+  na <- is.na(x)
   x <- gsub("\\d", "", x)
   x <- strsplit(x, "\\s+")
-  lengths(x)
+  x <- lengths(s)
+  x[na] <- NA_integer_
+  x
 }
 
 n_digits <- function(x) {
-  nchar(gsub("\\D", "", x))
+  na <- is.na(x)
+  x <- nchar(gsub("\\D", "", x))
+  x[na] <- NA_integer_
+  x
 }
 
 n_hashtags <- function(x) {
+  na <- is.na(x)
   m <- gregexpr("#\\S+", x)
   m <- regmatches(x, m)
-  lengths(m)
+  x <- lengths(m)
+  x[na] <- NA_integer_
+  x
 }
 
 n_mentions <- function(x) {
+  na <- is.na(x)
   m <- gregexpr("@\\S+", x)
   m <- regmatches(x, m)
-  lengths(m)
+  x <- lengths(m)
+  x[na] <- NA_integer_
+  x
 }
 
 n_commas <- function(x) {
+  na <- is.na(x)
   m <- gregexpr(",+", x)
   m <- regmatches(x, m)
-  lengths(m)
+  x <- lengths(m)
+  x[na] <- NA_integer_
+  x
 }
 
 n_caps <- function(x) {
+  na <- is.na(x)
   m <- gregexpr("[A-Z]", x)
   m <- regmatches(x, m)
-  lengths(m)
+  x <- lengths(m)
+  x[na] <- NA_integer_
+  x
 }
 
 extract_features <- function(data) {
   data <- rtweet_join(data)
+  data <- data[names(data) %in% c("retweet_favorite_count")]
   ##data <- sex_matches(data)
   ## mutate 9 total features
   data <- dplyr::mutate(data,
