@@ -49,7 +49,7 @@ n_words <- function(x) {
   na <- is.na(x)
   x <- gsub("\\d", "", x)
   x <- strsplit(x, "\\s+")
-  x <- lengths(s)
+  x <- lengths(x)
   x[na] <- NA_integer_
   x
 }
