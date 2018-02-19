@@ -11,16 +11,19 @@ botornot <- function(x) UseMethod("botornot")
 
 #' @export
 botornot.data.frame <- function(x) {
+  x <- convert_factors(x)
   ## store original order of users
   x_ <- x$user_id
   ## merge users and tweets data
   x <- rtweet_join(x)
+  ## extract any misssing features
+  xx <- extract_features(x)
+  xx
+
   ## remove duplicate users
   x <- x[!duplicated(x$user_id), ]
   ## store screen names
   sn <- x$screen_name
-  ## extract any misssing features
-  x <- extract_features(x)
   ## classify data
   p <- classify_data(x)
   data.frame(user = sn, prob_bot = p)
@@ -44,12 +47,19 @@ botornot.character <- function(x) {
   x_ <- x
   ## remove NA and duplicates
   x <- x[!is.na(x) & !duplicated(x)]
+  ## get most recent 200 tweets
+  tw <- rtweet::get_timeline(x, n = 200)
   ## lookup users data
-  x <- rtweet::lookup_users(x)
+  ##x <- rtweet::lookup_users(x)
   ## merge users and tweets data
-  x <- rtweet_join(x)
+  x <- rtweet_join(tw)
+  ##x <- rtweet_join(x)
+  ## combine with tweets data
+  ##tw <- tw[names(tw) != "screen_name"]
+  ##x[!names(x) %in% names(tw)]
+  ##x <- dplyr::left_join(tw, x)
   ## remove duplicate users
-  x <- x[!duplicated(x$user_id), ]
+  ##x <- x[!duplicated(x$user_id), ]
   ## pass to next method
   botornot(x)
 }
