@@ -7,7 +7,9 @@ An R package for classifying Twitter accounts as `bot or not`.
 Features
 --------
 
-Uses machine learning to classify Twitter accounts as bots or not bots. The model is 94% accurate. It is slightly better at classifying not bots than classifying bots (low type I error).
+Uses machine learning to classify Twitter accounts as bots or not bots. The model is 89.05% accurate when classifying bots, and 95.98% accurate when classifying non-bots.
+
+Overall, the model is correct 93.4% of the time.
 
 Install
 -------
@@ -41,12 +43,12 @@ data <- botornot(users)
 ## arrange by prob ests
 data[order(data$prob_bot), ]
 ##              user    prob_bot
-## 7   hadleywickham 0.005798216
-## 3 realDonaldTrump 0.006406957
-## 5       kearneymw 0.080821327
-## 2      juliasilge 0.093888100
-## 4       ma_salmon 0.094190686
-## 6       dataandme 0.503423779
-## 1     netflix_bot 0.982314113
-## 8 tidyversetweets 0.983066201
+## 3 realDonaldTrump 0.008428412
+## 7   hadleywickham 0.127433588
+## 2      juliasilge 0.511345270
+## 4       ma_salmon 0.641347529
+## 5       kearneymw 0.783140171
+## 6       dataandme 0.899990681
+## 1     netflix_bot 0.979255195
+## 8 tidyversetweets 0.996688826
 ```
