@@ -78,13 +78,12 @@ n_urls <- function(x) {
 }
 
 extract_features <- function(data) {
-  data <- rtweet_join(data)
-  users <- data$user_id
+  users <- unique(data$user_id)
   o <- vector("list", length(users))
   for (i in seq_along(users)) {
     o[[i]] <- extract_features_group(data[data$user_id == users[i], ])
   }
-  do.call("rbind", o)
+  tibble::as_tibble(do.call("rbind", o), validate = FALSE)
 }
 
 n_cap_words <- function(x) {
@@ -100,9 +99,10 @@ n_cap_words <- function(x) {
 all_lower <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
-  x <- gsub("@\\S", "", x)
-  m <- grepl("[A-Z]", x)
-  x <- as.integer(m)
+  x <- gsub("@\\S+", "", x)
+  m <- gregexpr("\\b[a-z]+\\b", x)
+  m <- regmatches(x, m)
+  x <- lengths(m)
   x[na] <- NA_integer_
   x
 }
@@ -115,7 +115,8 @@ extract_features_group <- function(data) {
   n_quotes <- sum(data$is_quote, na.rm = TRUE)
   has_tweet <- as.integer(any(!is.na(data$text)))
   data$text[data$is_retweet] <- NA_character_
-  data$retweet_count[data$is_retweet] <- 0
+  tweet_chars <- mean(nchar(data$text), na.rm = TRUE)
+  data$retweet_count[data$is_retweet] <- NA_integer_
   retweet_count <- mean(data$retweet_count, na.rm = TRUE)
   favorite_count <- mean(data$favorite_count, na.rm = TRUE)
   favourites_count <- max(data$favourites_count, na.rm = TRUE)
@@ -152,7 +153,7 @@ extract_features_group <- function(data) {
   sn_digits <- n_digits(sn)
   verified <- as.integer(any(data$verified))
   aca <- unique(data$account_created_at)[1]
-  years <- as.integer(
+  years <- as.numeric(
     difftime(Sys.time(), aca, units = "days")) / 365
   data$created_at <- as.POSIXct(ifelse(is.na(data$created_at),
     Sys.time() - 60 * 60 * 24 * 365, data$created_at),
@@ -171,7 +172,7 @@ extract_features_group <- function(data) {
   user_id <- unique(data$user_id)[1]
 
   data.frame(
-    user_id, screen_name = sn,
+    user_id, screen_name = sn, tweet_chars, years,
     n_retweets, n_quotes, has_tweet, n_mentions,
     retweet_count, favorite_count, favourites_count,
     n_links, n_hashtag, n_capwords, all_lowers,
@@ -180,9 +181,10 @@ extract_features_group <- function(data) {
     facebook, bio_chars, bio_hts, bio_sns,
     bio_caps, loc_chars, loc_commas, name_chars,
     name_words, name_caps, days_since_tweet,
-    sn_digits, verified, statuses_count,
+    sn_digits, verified, statuses_count, friends_count,
     followers_count, listed_count, tweets_to_followers,
-    statuses_rate, ff_ratio
+    statuses_rate, ff_ratio,
+    stringsAsFactors = FALSE
   )
 }
 

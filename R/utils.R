@@ -45,7 +45,7 @@ rtweet_join.data.frame <- function(x) {
   if (any(tn %in% un[un != "user_id"])) {
     tweets <- tweets[!tn %in% un[un != "user_id"]]
   }
-  tibble::as_tibble(merge(tweets, users, by = "user_id"),
+  tibble::as_tibble(unique(merge(tweets, users, by = "user_id")),
     validate = FALSE)
 }
 

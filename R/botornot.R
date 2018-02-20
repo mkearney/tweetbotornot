@@ -11,28 +11,20 @@ botornot <- function(x) UseMethod("botornot")
 
 #' @export
 botornot.data.frame <- function(x) {
+  ## convert factors to char if necessary
   x <- convert_factors(x)
-  ## store original order of users
-  x_ <- x$user_id
   ## merge users and tweets data
   x <- rtweet_join(x)
   ## extract any misssing features
-  xx <- extract_features(x)
-  xx
-
-  ## remove duplicate users
-  x <- x[!duplicated(x$user_id), ]
+  x <- extract_features(x)
   ## store screen names
   sn <- x$screen_name
   ## classify data
   p <- classify_data(x)
-  data.frame(user = sn, prob_bot = p)
-  ## match positions
-  #o <- match(x$user_id, x_)
-  ## preserve NAs and match p values
-  #o[!is.na(o)] <- p[!is.na(o)]
-  ## return output
-  #o
+  ## return as tibble
+  tibble::as_tibble(
+    data.frame(user = sn, prob_bot = p, stringsAsFactors = FALSE),
+    validate = FALSE)
 }
 
 #' @export
@@ -43,23 +35,10 @@ botornot.factor <- function(x) {
 
 #' @export
 botornot.character <- function(x) {
-  ## store original
-  x_ <- x
   ## remove NA and duplicates
   x <- x[!is.na(x) & !duplicated(x)]
   ## get most recent 200 tweets
-  tw <- rtweet::get_timeline(x, n = 200)
-  ## lookup users data
-  ##x <- rtweet::lookup_users(x)
-  ## merge users and tweets data
-  x <- rtweet_join(tw)
-  ##x <- rtweet_join(x)
-  ## combine with tweets data
-  ##tw <- tw[names(tw) != "screen_name"]
-  ##x[!names(x) %in% names(tw)]
-  ##x <- dplyr::left_join(tw, x)
-  ## remove duplicate users
-  ##x <- x[!duplicated(x$user_id), ]
+  x <- rtweet::get_timelines(x, n = 100)
   ## pass to next method
   botornot(x)
 }
