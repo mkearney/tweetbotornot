@@ -38,7 +38,8 @@ library(botornot)
 ## select users
 users <- c("realdonaldtrump", "netflix_bot",
   "kearneymw", "dataandme", "hadleywickham",
-  "ma_salmon", "juliasilge", "tidyversetweets")
+  "ma_salmon", "juliasilge", "tidyversetweets", 
+  "American__Voter", "mothgenerator", "hrbrmstr")
 
 ## get botornot estimates
 data <- botornot(users)
