@@ -137,22 +137,22 @@ extract_features_group <- function(data) {
   google <- sum(data$source == "Google", na.rm = TRUE) / nrow(data)
   ifttt <- sum(data$source == "IFTTT", na.rm = TRUE) / nrow(data)
   facebook <- sum(data$source == "Facebook", na.rm = TRUE) / nrow(data)
-  dsc <- unique(data$description)[1]
+  dsc <- data$description[1]
   bio_chars <- nchar(dsc)
   bio_hts <- n_hashtags(dsc)
   bio_sns <- n_mentions(dsc)
   bio_caps <- n_caps(dsc)
-  loc <- unique(data$location)[1]
+  loc <- data$location[1]
   loc_chars <- nchar(loc)
   loc_commas <- n_commas(loc)
-  nm <- unique(data$name)[1]
+  nm <- data$name[1]
   name_chars <- nchar(nm)
   name_words <- n_words(nm)
   name_caps <- n_caps(nm)
-  sn <- unique(data$screen_name)[1]
+  sn <- data$screen_name[1]
   sn_digits <- n_digits(sn)
   verified <- as.integer(any(data$verified))
-  aca <- unique(data$account_created_at)[1]
+  aca <- data$account_created_at[1]
   years <- as.numeric(
     difftime(Sys.time(), aca, units = "days")) / 365
   data$created_at <- as.POSIXct(ifelse(is.na(data$created_at),
@@ -169,9 +169,9 @@ extract_features_group <- function(data) {
   statuses_rate <- statuses_count / years
   ## i added one here so it wouldn't return NaN or undefined values (0 / x)
   ff_ratio <- (followers_count + 1) / (friends_count + followers_count + 1)
-  user_id <- unique(data$user_id)[1]
+  user_id <- data$user_id[1]
 
-  data.frame(
+  df <- data.frame(
     user_id, screen_name = sn, tweet_chars, years,
     n_retweets, n_quotes, has_tweet, n_mentions,
     retweet_count, favorite_count, favourites_count,
@@ -184,13 +184,19 @@ extract_features_group <- function(data) {
     sn_digits, verified, statuses_count, friends_count,
     followers_count, listed_count, tweets_to_followers,
     statuses_rate, ff_ratio,
-    stringsAsFactors = FALSE
+    stringsAsFactors = FALSE,
+    check.rows = FALSE,
+    check.names = FALSE,
+    row.names = NULL
   )
+  df[, -c(1:2)] <- vap_dbl(df[, -c(1:2)], ~ ifelse(is.na(.), 0, .))
+  df
 }
 
 train_model <- function(data, n_trees = 1000) {
   data <- data[!vap_lgl(data, ~ all(is.na(.)) || any(lengths(.) != 1L))]
   data <- data[vap_lgl(data, ~ is.numeric(.) | is.integer(.))]
+  data <- data[vap_lgl(data, ~ var(.) > 0)]
   ## set params and run model (~ . means use all other variables)
   gbm::gbm(bot ~ .,
     data = data,
