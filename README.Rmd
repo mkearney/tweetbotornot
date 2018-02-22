@@ -3,7 +3,7 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = ">")
 ```
 
 ## botornot
@@ -12,9 +12,9 @@ An R package for classifying Twitter accounts as `bot or not`.
 
 ## Features
 
-Uses machine learning to classify Twitter accounts as bots or not bots. The model is 90% accurate when classifying bots, and 92% accurate when classifying non-bots.
+Uses machine learning to classify Twitter accounts as bots or not bots. The model is 92.56% accurate when classifying bots and 92.03% accurate when classifying non-bots.
 
-Overall, the model is correct 91% of the time. 
+Overall, the model is correct 92.2% of the time.
 
 ## Install
 
