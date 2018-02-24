@@ -4,11 +4,17 @@
 \alias{botornot}
 \title{botornot}
 \usage{
-botornot(x)
+botornot(x, fast = FALSE)
 }
 \arguments{
 \item{x}{Object to be classified. Can be user IDs, screen names, or
 data frames returned by rtweet.}
+
+\item{fast}{Logical indicating whether to use the fast (lighter) model. The
+default (fast = FALSE) method uses the most recent 100 tweets posted by
+users to determine the probability of bot. The fast (fast = TRUE) method
+only uses users-level data, which is easier to get in large quantities from
+Twitter's APIS but overall less accurate.}
 }
 \value{
 Classifications for all users expressed as probability of whether

@@ -3,7 +3,7 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = ">")
+knitr::opts_chunk$set(echo = TRUE, comment = "#")
 ```
 
 ## botornot
@@ -29,7 +29,7 @@ devtools::install_github("mkearney/botornot")
 
 ## Usage
 
-There's one function `botornot()`. Give it a vector of screen names, user IDs, or data frames returned by [rtweet](http://rtweet.info).
+There's one function `botornot()`. Give it a vector of screen names or user IDs and let it go to work.
 
 ```{r}
 ## load package
@@ -43,6 +43,38 @@ users <- c("realdonaldtrump", "netflix_bot",
 
 ## get botornot estimates
 data <- botornot(users)
+
+## arrange by prob ests
+data[order(data$prob_bot), ]
+```
+
+### Integration with rtweet
+
+The `botornot()` function also accepts data returned by [rtweet](http://rtweet.info) functions.
+
+```{r}
+## load rtweet
+library(rtweet)
+
+## get most recent 100 tweets from each user
+tmls <- get_timelines(users, n = 100)
+
+## pass the returned data to botornot()
+data <- botornot(tmls)
+
+## arrange by prob ests
+data[order(data$prob_bot), ]
+```
+
+### `fast = TRUE`
+
+The default [gradient boosted] model uses both users-level (bio, location, number of followers and friends, etc.) **and** tweets-level (number of hashtags, mentions, capital letters, etc. in a user's most recent 100 tweets) data to estimate the probability that users are bots. For larger data sets, this method can be quite slow. Due to Twitter's REST API rate limits, users are limited to only 180 estimates per every 15 minutes. 
+
+To maximize the number of estimates per 15 minutes (at the cost of being less accurate), use the `fast = TRUE` argument. This method uses **only** users-level data, which increases the maximum number of estimates per 15 minutes to *90,000*! Due to losses in accuracy, this method should be used with caution!
+
+```{r}
+## get botornot estimates
+data <- botornot(users, fast = TRUE)
 
 ## arrange by prob ests
 data[order(data$prob_bot), ]

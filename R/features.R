@@ -1,8 +1,7 @@
 
+#model_ytweets <- function() botornot_models$ytweets
 
-
-train_data <- function() botornot$train
-test_data <- function() botornot$test
+#model_ntweets <- function() botornot_models$ntweets
 
 ## feature extraction
 
@@ -229,16 +228,17 @@ percent_correct <- function(data, m, n_trees = 500) {
   message(sprintf("Overall, the model was correct %s%% of the time.", pc))
 }
 
+
 #' classify data
 #'
 #' Generate predicted probabilities of observations being bots.
 #'
 #' @param x New data on which to apply botornot model.
+#' @param model gbm model from which to predict.
 #' @return Vector of predictions expressed as probabilities of accounts being
 #'   bots.
-#' @export
-classify_data <- function(x) {
-  best.iter <- gbm::gbm.perf(botornot_model, method = "cv", plot.it = FALSE)
-  gbm::predict.gbm(botornot_model, n.trees = best.iter, newdata = x,
+classify_data <- function(x, model) {
+  best.iter <- gbm::gbm.perf(model, method = "cv", plot.it = FALSE)
+  gbm::predict.gbm(model, n.trees = best.iter, newdata = x,
     type = "response")
 }

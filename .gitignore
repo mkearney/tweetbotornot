@@ -6,3 +6,4 @@ data/botornot_test.rda
 data/botornot_train.rda
 data/ftrain.rda
 data/ftest.rda
+data/botnotbot.rds

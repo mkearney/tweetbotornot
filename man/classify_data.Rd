@@ -4,10 +4,12 @@
 \alias{classify_data}
 \title{classify data}
 \usage{
-classify_data(x)
+classify_data(x, model)
 }
 \arguments{
 \item{x}{New data on which to apply botornot model.}
+
+\item{model}{gbm model from which to predict.}
 }
 \value{
 Vector of predictions expressed as probabilities of accounts being
