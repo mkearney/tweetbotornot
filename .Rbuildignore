@@ -3,3 +3,6 @@
 ^make\.R$
 ^data\/botornot_test\.rda
 ^data\/botornot_train\.rda
+^R\/dataandme\.R$
+^R\/get_features\.R$
+^R\/since_last\.R$
