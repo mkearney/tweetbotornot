@@ -1,3 +1,5 @@
+utils::globalVariables(c("account_created_at", "created_at", "favorite_count", "favourites_count", "followers_count", "friends_count", "is_quote", "is_retweet", "listed_count", "n", "n_tweets", "retweet_count", "statuses_count", "text", "user_id", "verified", "years_on_twitter"))
+
 extract_features_ytweets <- function(x) {
   ## remove retweet text and counts
   x$text[x$is_retweet] <- NA_character_

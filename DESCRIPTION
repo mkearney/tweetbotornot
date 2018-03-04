@@ -14,8 +14,11 @@ License: MIT + file LICENSE
 Depends:
     R (>= 3.1.0)
 Imports:
+    dplyr,
     gbm,
+    rlang,
     rtweet,
+    textfeatures,
     tibble
 Suggests: 
     knitr,

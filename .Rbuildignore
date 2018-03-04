@@ -1,10 +1,5 @@
 ^\.Rproj\.user$
 ^make\.R$
-^data\/botornot_test\.rda
-^data\/botornot_train\.rda
-^lists2bots\.R$
-^bots-lists\.rds$
-^bots\.rds$
-^bot-ids\.rds$
 ^.*\.Rproj$
 ^LICENSE\.md$
+^README\.Rmd$
