@@ -130,6 +130,7 @@ classify_data <- function(x, model) {
 extract_features_ntweets <- function(x) {
   ## remove user level duplicates
   x <- dplyr::filter(x, !duplicated(user_id))
+  x <- dplyr::group_by(x, user_id)
   description <- textfeatures::textfeatures(
     dplyr::select(x, user_id, text = description))
   names(description) <- paste0("description_", names(description))

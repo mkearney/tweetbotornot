@@ -120,15 +120,15 @@ data[order(data$prob_bot), ]
 #> # A tibble: 11 x 2
 #>    user            prob_bot
 #>    <chr>              <dbl>
-#>  1 ma_salmon          0.891
-#>  2 dataandme          0.923
-#>  3 netflix_bot        0.938
-#>  4 kearneymw          0.947
-#>  5 hadleywickham      0.963
-#>  6 realDonaldTrump    0.965
-#>  7 hrbrmstr           0.980
-#>  8 tidyversetweets    0.981
-#>  9 mothgenerator      0.982
-#> 10 juliasilge         0.990
-#> 11 American__Voter    0.992
+#>  1 hadleywickham    0.00316
+#>  2 kearneymw        0.0296 
+#>  3 ma_salmon        0.0385 
+#>  4 hrbrmstr         0.0478 
+#>  5 juliasilge       0.0658 
+#>  6 dataandme        0.245  
+#>  7 realDonaldTrump  0.376  
+#>  8 netflix_bot      0.987  
+#>  9 tidyversetweets  0.997  
+#> 10 American__Voter  0.998  
+#> 11 mothgenerator    0.999
 ```
