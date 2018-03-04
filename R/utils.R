@@ -1,53 +1,3 @@
-#' retweet_join
-#'
-#' @param x Data returned by rtweet function to be merged (users and tweets)
-#' @return A single tibble with both users and tweets data
-#' @export
-rtweet_join <- function(x) UseMethod("rtweet_join")
-
-#' @export
-rtweet_join.data.frame <- function(x) {
-  tub <- tw_or_usr(x)
-  if (tub == "tweets") {
-    users <- attr(x, "users")
-    if (is.null(users)) users <- data.frame()
-    tweets <- x
-  } else if (tub == "users") {
-    tweets <- attr(x, "tweets")
-    if (is.null(tweets)) tweets <- data.frame()
-    users <- x
-  } else if (tub == "both") {
-    x <- convert_factors(x)
-    return(x)
-  }
-  users <- convert_factors(users)
-  tweets <- convert_factors(tweets)
-  if (nrow(users) == 0) {
-    return(tweets)
-  }
-  if (nrow(tweets) == 0) {
-    return(users)
-  }
-  un <- names(users)
-  tn <- names(tweets)
-  if ("screen_name" %in% un && "screen_name" %in% tn) {
-    tweets <- tweets[, names(tweets) != "screen_name"]
-    tn <- names(tweets)
-  }
-  if ("lang" %in% un && "lang" %in% tn) {
-    names(users)[names(users) == "lang"] <- "account_lang"
-    un <- names(users)
-  }
-  if ("created_at" %in% un && "created_at" %in% tn) {
-    names(users)[names(users) == "created_at"] <- "account_created_at"
-    un <- names(users)
-  }
-  if (any(tn %in% un[un != "user_id"])) {
-    tweets <- tweets[!tn %in% un[un != "user_id"]]
-  }
-  tibble::as_tibble(unique(merge(tweets, users, by = "user_id")),
-    validate = FALSE)
-}
 
 convert_factors <- function(x) {
   fcts <- vap_lgl(x, is.factor)
@@ -78,9 +28,9 @@ vap_chr <- function(.x, .f) {
 
 tw_or_usr <- function(x) {
   num_tweets <- sum(c("text", "source", "mentions_screen_name", "retweet_count",
-    "favorite_count", "hashtags") %in% names(x))
-  num_users <- sum(c("name", "followers_count", "favourites_count",
-    "friends_count", "account_created_at", "description") %in% names(x))
+    "favorite_count", "hashtags") %in% names(x), na.rm = TRUE)
+  num_users <- sum(c("name", "followers_count", "favourites_count", "friends_count",
+    "account_created_at", "description") %in% names(x), na.rm = TRUE)
   if (num_tweets > 3 && num_users > 3) {
     return("both")
   }
@@ -90,4 +40,28 @@ tw_or_usr <- function(x) {
   if (num_users > num_tweets) {
     return("users")
   }
+}
+
+
+hourofweekday <- function(x) {
+  h <- as.numeric(substr(x, 12, 13))
+  m <- as.numeric(substr(x, 15, 16)) / 60
+  hms <- round(timeofday(x), 0)
+  wd <- format(x, "%a")
+  wd <- as.integer(factor(
+    wd, levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))) * 24
+  (wd + hms) / 24
+}
+
+timeofday <- function(x) {
+  h <- as.numeric(substr(x, 12, 13))
+  m <- as.numeric(substr(x, 15, 16)) / 60
+  s <- as.numeric(substr(x, 18, 19)) / 360
+  h + m + s
+}
+count_mean <- function(x) {
+  if (length(x) == 1L && is.na(x)) return(NA_real_)
+  x <- table(x)
+  x <- as.integer(x) - 1L
+  mean(x, na.rm = TRUE)
 }

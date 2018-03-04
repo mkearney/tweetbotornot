@@ -13,7 +13,7 @@ classify_data(x, model)
 }
 \value{
 Vector of predictions expressed as probabilities of accounts being
-  bots.
+bots.
 }
 \description{
 Generate predicted probabilities of observations being bots.

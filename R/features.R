@@ -1,195 +1,69 @@
+extract_features_ytweets <- function(x) {
+  ## remove retweet text and counts
+  x$text[x$is_retweet] <- NA_character_
+  x$retweet_count[x$is_retweet] <- NA_integer_
 
-#model_ytweets <- function() botornot_models$ytweets
+  ## remove user level duplicates
+  x_usr <- dplyr::group_by(dplyr::filter(x, !duplicated(user_id)), user_id)
 
-#model_ntweets <- function() botornot_models$ntweets
+  ## group by user
+  x <- dplyr::group_by(x, user_id)
 
-## feature extraction
+  ## tweet features
+  status_text <- textfeatures::textfeatures(
+    dplyr::select(x, user_id, text = text))
+  names(status_text) <- paste0("status_text_", names(status_text))
 
-## is double
-is_num <- function(x) is.numeric(x) | is.integer(x)
+  description <- textfeatures::textfeatures(
+    dplyr::select(x_usr, user_id, text = description))
+  names(description) <- paste0("description_", names(description))
 
-n_words <- function(x) {
-  na <- is.na(x)
-  if (all(na)) return(0)
-  x <- gsub("\\d", "", x)
-  x <- strsplit(x, "\\s+")
-  x <- lengths(x)
-  x[na] <- NA_integer_
-  x
-}
+  location <- textfeatures::textfeatures(
+    dplyr::select(x_usr, user_id, text = location))
+  names(location) <- paste0("location_", names(location))
 
-n_digits <- function(x) {
-  na <- is.na(x)
-  if (all(na)) return(0)
-  x <- nchar(gsub("\\D", "", x))
-  x[na] <- NA_integer_
-  x
-}
+  name <- textfeatures::textfeatures(
+    dplyr::select(x_usr, user_id, text = name))
+  names(name) <- paste0("name_", names(name))
 
-n_hashtags <- function(x) {
-  na <- is.na(x)
-  if (all(na)) return(0)
-  m <- gregexpr("#\\S+", x)
-  m <- regmatches(x, m)
-  x <- lengths(m)
-  x[na] <- NA_integer_
-  x
-}
+  #all_nas <- function(x) all(is.na(x) | is.nan(x))
+  #x <- dplyr::mutate_if(x, is.numeric, function(.) ifelse(all_nas(.), 0, .))
 
-n_mentions <- function(x) {
-  na <- is.na(x)
-  if (all(na)) return(0)
-  m <- gregexpr("@\\S+", x)
-  m <- regmatches(x, m)
-  x <- lengths(m)
-  x[na] <- NA_integer_
-  x
-}
-
-n_commas <- function(x) {
-  na <- is.na(x)
-  if (all(na)) return(0)
-  m <- gregexpr(",+", x)
-  m <- regmatches(x, m)
-  x <- lengths(m)
-  x[na] <- NA_integer_
-  x
-}
-
-n_caps <- function(x) {
-  na <- is.na(x)
-  if (all(na)) return(0)
-  m <- gregexpr("[A-Z]", x)
-  m <- regmatches(x, m)
-  x <- lengths(m)
-  x[na] <- NA_integer_
-  x
-}
-
-n_urls <- function(x) {
-  na <- is.na(x)
-  if (all(na)) return(0)
-  m <- gregexpr("https?:", x)
-  m <- regmatches(x, m)
-  x <- lengths(m)
-  x[na] <- NA_integer_
-  x
-}
-
-extract_features <- function(data) {
-  users <- unique(data$user_id)
-  o <- vector("list", length(users))
-  for (i in seq_along(users)) {
-    o[[i]] <- extract_features_group(data[data$user_id == users[i], ])
-  }
-  tibble::as_tibble(do.call("rbind", o), validate = FALSE)
-}
-
-n_cap_words <- function(x) {
-  na <- is.na(x)
-  if (all(na)) return(0)
-  m <- gregexpr("\\b[A-Z]+\\b", x)
-  m <- regmatches(x, m)
-  x <- lengths(m)
-  x[na] <- NA_integer_
-  x
-}
-
-all_lower <- function(x) {
-  na <- is.na(x)
-  if (all(na)) return(0)
-  x <- gsub("@\\S+", "", x)
-  m <- gregexpr("\\b[a-z]+\\b", x)
-  m <- regmatches(x, m)
-  x <- lengths(m)
-  x[na] <- NA_integer_
-  x
-}
-
-extract_features_group <- function(data) {
-  if (length(unique(data$user_id)) > 1L) {
-    stop("this should be for 1 user at a time")
-  }
-  n_retweets <- sum(data$is_retweet, na.rm = TRUE)
-  n_quotes <- sum(data$is_quote, na.rm = TRUE)
-  has_tweet <- as.integer(any(!is.na(data$text)))
-  data$text[data$is_retweet] <- NA_character_
-  tweet_chars <- mean(nchar(data$text), na.rm = TRUE)
-  data$retweet_count[data$is_retweet] <- NA_integer_
-  retweet_count <- mean(data$retweet_count, na.rm = TRUE)
-  favorite_count <- mean(data$favorite_count, na.rm = TRUE)
-  favourites_count <- max(data$favourites_count, na.rm = TRUE)
-  n_mentions <- mean(n_mentions(data$text), na.rm = TRUE)
-  n_links <- mean(n_urls(data$text), na.rm = TRUE)
-  n_hashtag <- mean(n_hashtags(data$text), na.rm = TRUE)
-  n_capwords <- mean(n_cap_words(data$text), na.rm = TRUE)
-  all_lowers <- mean(all_lower(data$text), na.rm = TRUE)
-  ## number of pure tweets
-  n_tweets <- sum(!data$is_retweet & !data$is_quote, na.rm = TRUE)
-  iphone <- sum(data$source == "Twitter for iPhone", na.rm = TRUE) / nrow(data)
-  webclient <- sum(data$source == "Twitter Web Client", na.rm = TRUE) / nrow(data)
-  ios <- sum(data$source == "Tweetbot for iΟS", na.rm = TRUE) / nrow(data)
-  android <- sum(data$source == "Twitter for Android", na.rm = TRUE) / nrow(data)
-  hootsuite <- sum(data$source == "Hootsuite", na.rm = TRUE) / nrow(data)
-  lite <- sum(data$source == "Twitter Lite", na.rm = TRUE) / nrow(data)
-  ipad <- sum(data$source == "Twitter for iPad", na.rm = TRUE) / nrow(data)
-  google <- sum(data$source == "Google", na.rm = TRUE) / nrow(data)
-  ifttt <- sum(data$source == "IFTTT", na.rm = TRUE) / nrow(data)
-  facebook <- sum(data$source == "Facebook", na.rm = TRUE) / nrow(data)
-  dsc <- data$description[1]
-  bio_chars <- nchar(dsc)
-  bio_hts <- n_hashtags(dsc)
-  bio_sns <- n_mentions(dsc)
-  bio_caps <- n_caps(dsc)
-  loc <- data$location[1]
-  loc_chars <- nchar(loc)
-  loc_commas <- n_commas(loc)
-  nm <- data$name[1]
-  name_chars <- nchar(nm)
-  name_words <- n_words(nm)
-  name_caps <- n_caps(nm)
-  sn <- data$screen_name[1]
-  sn_digits <- n_digits(sn)
-  verified <- as.integer(any(data$verified))
-  aca <- data$account_created_at[1]
-  years <- as.numeric(
-    difftime(Sys.time(), aca, units = "days")) / 365
-  data$created_at <- as.POSIXct(ifelse(is.na(data$created_at),
-    Sys.time() - 60 * 60 * 24 * 365, data$created_at),
-    origin = "1970-01-01", tz = "UTC")
-  days_since_tweet <- round(as.numeric(difftime(Sys.time(),
-    max(data$created_at, na.rm = TRUE), units = "days")), 0)
-  ## i added one here so it wouldn't return NaN or undefined values (0 / x)
-  statuses_count <- max(data$statuses_count, na.rm = TRUE)
-  followers_count <- max(data$followers_count, na.rm = TRUE)
-  friends_count <- max(data$friends_count, na.rm = TRUE)
-  listed_count <- max(data$listed_count, na.rm = TRUE)
-  tweets_to_followers <- (statuses_count + 1) / (followers_count + 1)
-  statuses_rate <- statuses_count / years
-  ## i added one here so it wouldn't return NaN or undefined values (0 / x)
-  ff_ratio <- (followers_count + 1) / (friends_count + followers_count + 1)
-  user_id <- data$user_id[1]
-
-  df <- data.frame(
-    user_id, screen_name = sn, tweet_chars, years,
-    n_retweets, n_quotes, has_tweet, n_mentions,
-    retweet_count, favorite_count, favourites_count,
-    n_links, n_hashtag, n_capwords, all_lowers,
-    n_tweets, iphone, webclient, ios, android,
-    hootsuite, lite, ipad, google, ifttt,
-    facebook, bio_chars, bio_hts, bio_sns,
-    bio_caps, loc_chars, loc_commas, name_chars,
-    name_words, name_caps, days_since_tweet,
-    sn_digits, verified, statuses_count, friends_count,
-    followers_count, listed_count, tweets_to_followers,
-    statuses_rate, ff_ratio,
-    stringsAsFactors = FALSE,
-    check.rows = FALSE,
-    check.names = FALSE,
-    row.names = NULL
+  x <- dplyr::summarise(x,
+    n_sincelast = count_mean(since_last(created_at)),
+    n_timeofday = count_mean(hourofweekday(created_at)),
+    n = n(),
+    n_retweets = sum(is_retweet, na.rm = TRUE),
+    n_quotes = sum(is_quote, na.rm = TRUE),
+    retweet_count = mean(c(0, retweet_count), na.rm = TRUE),
+    favorite_count = mean(c(0, favorite_count), na.rm = TRUE),
+    favourites_count = max(c(0, favourites_count), na.rm = TRUE),
+    n_tweets = sum(!is_retweet & !is_quote, na.rm = TRUE),
+    iphone = sum(grepl("iphone", source, ignore.case = TRUE), na.rm = TRUE) / n,
+    webclient = sum(grepl("web client", source, ignore.case = TRUE), na.rm = TRUE) / n,
+    android = sum(grepl("android", source, ignore.case = TRUE), na.rm = TRUE) / n,
+    hootsuite = sum(grepl("hootsuite", source, ignore.case = TRUE), na.rm = TRUE) / n,
+    lite = sum(grepl("twitter lite", source, ignore.case = TRUE), na.rm = TRUE) / n,
+    ipad = sum(grepl("for iPad", source, ignore.case = TRUE), na.rm = TRUE) / n,
+    google = sum(grepl("google", source, ignore.case = TRUE), na.rm = TRUE) / n,
+    ifttt = sum(grepl("IFTTT", source, ignore.case = TRUE), na.rm = TRUE) / n,
+    facebook = sum(grepl("facebook", source, ignore.case = TRUE), na.rm = TRUE) / n,
+    verified = as.integer(verified[1]),
+    years_on_twitter = as.numeric(
+      difftime(Sys.time(), account_created_at[1], units = "days")) / 365,
+    tweets_per_year = n_tweets / (1 + years_on_twitter),
+    ## i added one here so it wouldn't return NaN or undefined values (0 / x)
+    statuses_count  = max(c(0, statuses_count), na.rm = TRUE),
+    followers_count  = max(c(0, followers_count), na.rm = TRUE),
+    friends_count  = max(c(0, friends_count), na.rm = TRUE),
+    listed_count  = max(c(0, listed_count), na.rm = TRUE),
+    tweets_to_followers  = (statuses_count + 1) / (followers_count + 1),
+    statuses_rate  = (statuses_count + 1) / (years_on_twitter + .001),
+    ff_ratio = (followers_count + 1) / (friends_count + followers_count + 1)
   )
-  df[, -c(1:2)] <- vap_dbl(df[, -c(1:2)], ~ ifelse(is.na(.), 0, .))
-  df
+  x <- x[names(x) != "n"]
+  tibble::as_tibble(cbind(x, status_text, description, name, location),
+    validate = FALSE)
 }
 
 train_model <- function(data, n_trees = 1000) {
@@ -242,3 +116,47 @@ classify_data <- function(x, model) {
   gbm::predict.gbm(model, n.trees = best.iter, newdata = x,
     type = "response")
 }
+
+
+
+
+
+
+
+
+
+
+
+extract_features_ntweets <- function(x) {
+  ## remove user level duplicates
+  x <- dplyr::filter(x, !duplicated(user_id))
+  description <- textfeatures::textfeatures(
+    dplyr::select(x, user_id, text = description))
+  names(description) <- paste0("description_", names(description))
+
+  location <- textfeatures::textfeatures(
+    dplyr::select(x, user_id, text = location))
+  names(location) <- paste0("location_", names(location))
+
+  name <- textfeatures::textfeatures(
+    dplyr::select(x, user_id, text = name))
+  names(name) <- paste0("name_", names(name))
+
+  x <- dplyr::summarise(x,
+    favourites_count = max(c(0, favourites_count), na.rm = TRUE),
+    verified = as.integer(verified[1]),
+    years_on_twitter = as.numeric(
+      difftime(Sys.time(), account_created_at[1], units = "days")) / 365,
+    ## i added one here so it wouldn't return NaN or undefined values (0 / x)
+    statuses_count  = max(c(0, statuses_count), na.rm = TRUE),
+    followers_count  = max(c(0, followers_count), na.rm = TRUE),
+    friends_count  = max(c(0, friends_count), na.rm = TRUE),
+    listed_count  = max(c(0, listed_count), na.rm = TRUE),
+    tweets_to_followers  = (statuses_count + 1) / (followers_count + 1),
+    statuses_rate  = (statuses_count + 1) / (years_on_twitter + .001),
+    ff_ratio = (followers_count + 1) / (friends_count + followers_count + 1)
+  )
+  tibble::as_tibble(cbind(x, description, name, location),
+    validate = FALSE)
+}
+

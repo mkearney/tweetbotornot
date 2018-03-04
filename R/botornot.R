@@ -20,13 +20,17 @@ botornot.data.frame <- function(x, fast = FALSE) {
   x <- convert_factors(x)
   ## merge users and tweets data
   x <- rtweet_join(x)
-  ## extract any misssing features
-  x <- extract_features(x)
   ## store screen names
-  sn <- x$screen_name
+  sn <- unique(x$screen_name)
   if (fast) {
+    ## extract features
+    x <- extract_features_ntweets(x)
+    ## get model
     m <- botornot_models$ntweets
   } else {
+    ## extract features
+    x <- extract_features_ytweets(x)
+    ## get model
     m <- botornot_models$ytweets
   }
   ## classify data

@@ -10,8 +10,10 @@ since_last.data.frame <- function(x, units = "mins") {
   x <- x[order(x$created_at), ]
   ## calculate since last and store as variable
   x$since_last <- as.numeric(
-    difftime(x$created_at, c(as.POSIXct(NA), x$created_at[-nrow(x)]),
+    difftime(x$created_at, c(as.POSIXct(NA), x$created_at[-length(x$created_at)]),
       units = units))
+  ## replace nans
+  x$since_last[is.nan(x$since_last)] <- NA_real_
   ## match input positions
   x[x_, ]
 }
@@ -23,6 +25,8 @@ since_last.POSIXct <- function(x, units = "mins") {
   x <- sort(x)
   ## calculate since last
   x <- as.numeric(difftime(x, c(as.POSIXct(NA), x[-length(x)]), units = units))
+  ## replace nans
+  x[is.nan(x)] <- NA_real_
   ## match input positions
   x[x_]
 }
@@ -37,6 +41,8 @@ since_last.default <- function(x, units = "mins") {
   x <- sort(x)
   ## calculate since last
   x <- x - c(NA, x[-length(x)])
+  ## replace nans
+  x[is.nan(x)] <- NA_real_
   ## match input positions
   x[x_]
 }

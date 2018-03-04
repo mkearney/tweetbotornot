@@ -1,14 +1,27 @@
 Package: botornot
-Title: Classifies Twitter users as bots or not bots
+Title: Classify Twitter Users as Bot or Not
 Version: 0.0.1
-Authors@R: person("Michael", "Kearney", email = "kearneymw@missouri.edu", role = c("aut", "cre"))
-Description: Classifies Twitter users as bots or not bots.
-Depends: R (>= 3.4.3)
-License: MIT
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.0.1.9000
-Imports: 
+Authors@R: person("Michael Wayne", "Kearney", , 
+    "kearneymw@missouri.edu", role = c("aut", "cre"), 
+    comment = c(ORCID = "0000-0002-0730-4694"))
+Description: Classify Twitter accounts as bot or not bot. The packagae uses 
+    a gradient boosted model, which was trained using thousands of real 
+    automated (bot) and non-automated Twitter accounts, and returns estimated
+    probabilities of whether supplied accounts are bots.
+URL: https://github.com/mkearney/botornot
+BugReports: https://github.com/mkearney/botornot/issues
+License: MIT + file LICENSE
+Depends:
+    R (>= 3.1.0)
+Imports:
     gbm,
     rtweet,
     tibble
+Suggests: 
+    knitr,
+    roxygen2,
+    testthat
+Encoding: UTF-8
+LazyData: yes
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.0.1.9000

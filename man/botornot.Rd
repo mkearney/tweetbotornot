@@ -18,7 +18,7 @@ Twitter's APIS but overall less accurate.}
 }
 \value{
 Classifications for all users expressed as probability of whether
-  each account is a bot.
+each account is a bot.
 }
 \description{
 Classify users/accounts in Twitter data as bots or not bots.
