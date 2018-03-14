@@ -6,7 +6,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 ```
 
-## botornot
+# rtweet <img src="man/figures/logo.png" align="right" /> 
 
 An R package for classifying Twitter accounts as `bot or not`.
 
