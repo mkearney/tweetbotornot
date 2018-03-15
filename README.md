@@ -53,17 +53,17 @@ data[order(data$prob_bot), ]
 #> # A tibble: 11 x 2
 #>    user            prob_bot
 #>    <chr>              <dbl>
-#>  1 American__Voter  0.00290
-#>  2 kearneymw        0.00753
-#>  3 hadleywickham    0.0171 
-#>  4 dataandme        0.0582 
-#>  5 netflix_bot      0.0852 
-#>  6 tidyversetweets  0.0858 
-#>  7 ma_salmon        0.174  
-#>  8 realDonaldTrump  0.974  
-#>  9 hrbrmstr         0.997  
-#> 10 juliasilge       0.999  
-#> 11 mothgenerator    0.999
+#>  1 hadleywickham    0.00290
+#>  2 realDonaldTrump  0.00753
+#>  3 kearneymw        0.0171 
+#>  4 ma_salmon        0.0582 
+#>  5 juliasilge       0.0852 
+#>  6 hrbrmstr         0.0858 
+#>  7 dataandme        0.174  
+#>  8 netflix_bot      0.974  
+#>  9 tidyversetweets  0.997  
+#> 10 mothgenerator    0.999  
+#> 11 American__Voter  0.999
 ```
 
 ### Integration with rtweet
@@ -90,17 +90,17 @@ data[order(data$prob_bot), ]
 #> # A tibble: 11 x 2
 #>    user            prob_bot
 #>    <chr>              <dbl>
-#>  1 American__Voter  0.00290
-#>  2 kearneymw        0.00753
-#>  3 hadleywickham    0.0171 
-#>  4 dataandme        0.0582 
-#>  5 netflix_bot      0.0852 
-#>  6 tidyversetweets  0.0858 
-#>  7 ma_salmon        0.174  
-#>  8 realDonaldTrump  0.974  
-#>  9 hrbrmstr         0.997  
-#> 10 juliasilge       0.999  
-#> 11 mothgenerator    0.999
+#>  1 hadleywickham    0.00290
+#>  2 realDonaldTrump  0.00753
+#>  3 kearneymw        0.0171 
+#>  4 ma_salmon        0.0582 
+#>  5 juliasilge       0.0852 
+#>  6 hrbrmstr         0.0858 
+#>  7 dataandme        0.174  
+#>  8 netflix_bot      0.974  
+#>  9 tidyversetweets  0.997  
+#> 10 mothgenerator    0.999  
+#> 11 American__Voter  0.999
 ```
 
 ### `fast = TRUE`
@@ -118,15 +118,15 @@ data[order(data$prob_bot), ]
 #> # A tibble: 11 x 2
 #>    user            prob_bot
 #>    <chr>              <dbl>
-#>  1 American__Voter  0.00316
-#>  2 hadleywickham    0.0333 
-#>  3 dataandme        0.0385 
-#>  4 tidyversetweets  0.0478 
-#>  5 netflix_bot      0.0640 
-#>  6 ma_salmon        0.245  
-#>  7 kearneymw        0.380  
-#>  8 realDonaldTrump  0.986  
-#>  9 hrbrmstr         0.997  
-#> 10 mothgenerator    0.998  
-#> 11 juliasilge       0.999
+#>  1 hadleywickham    0.00316
+#>  2 kearneymw        0.0333 
+#>  3 ma_salmon        0.0385 
+#>  4 hrbrmstr         0.0478 
+#>  5 juliasilge       0.0640 
+#>  6 dataandme        0.245  
+#>  7 realDonaldTrump  0.380  
+#>  8 netflix_bot      0.986  
+#>  9 tidyversetweets  0.997  
+#> 10 American__Voter  0.998  
+#> 11 mothgenerator    0.999
 ```

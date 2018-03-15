@@ -26,7 +26,7 @@ botornot.data.frame <- function(x, fast = FALSE) {
   ## merge users and tweets data
   x <- rtweet::join_rtweet(x)
   ## store screen names
-  sn <- unique(x$screen_name)
+  sn <- unique(x[, c("user_id", "screen_name")])
   if (fast) {
     ## extract features
     x <- extract_features_ntweets(x)
@@ -40,6 +40,8 @@ botornot.data.frame <- function(x, fast = FALSE) {
   }
   ## classify data
   p <- classify_data(x, m)
+  sn <- sn$screen_name[match(x$user_id, sn$user_id)]
+
   ## return as tibble
   tibble::as_tibble(
     data.frame(user = sn, prob_bot = p, stringsAsFactors = FALSE),
