@@ -6,7 +6,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 ```
 
-# rtweet <img src="man/figures/logo.png" align="right" /> 
+# botrnot <img src="man/figures/logo.png" align="right" /> 
 
 An R package for classifying Twitter accounts as `bot or not`.
 
@@ -26,8 +26,13 @@ Install from Github.
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
-devtools::install_github("mkearney/botornot")
+devtools::install_github("mkearney/botrnot")
 ```
+
+## API authorization
+
+Users must be authorized in order to interact with Twitter's API. To setup your 
+machine for authorized request, [see these instructions provided in the rtweet package](http://rtweet.info/articles/auth.html).
 
 ## Usage
 
@@ -35,7 +40,7 @@ There's one function `botornot()`. Give it a vector of screen names or user IDs 
 
 ```{r}
 ## load package
-library(botornot)
+library(botrnot)
 
 ## select users
 users <- c("realdonaldtrump", "netflix_bot",

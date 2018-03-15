@@ -3,6 +3,5 @@
 S3method(botornot,character)
 S3method(botornot,data.frame)
 S3method(botornot,factor)
-S3method(rtweet_join,data.frame)
 export(botornot)
-export(rtweet_join)
+export(botrnot)

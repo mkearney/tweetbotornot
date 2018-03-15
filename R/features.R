@@ -1,4 +1,4 @@
-utils::globalVariables(c("account_created_at", "created_at", "favorite_count", "favourites_count", "followers_count", "friends_count", "is_quote", "is_retweet", "listed_count", "n", "n_tweets", "retweet_count", "statuses_count", "text", "user_id", "verified", "years_on_twitter"))
+utils::globalVariables(c("account_created_at", "created_at", "favorite_count", "favourites_count", "followers_count", "friends_count", "is_quote", "is_retweet", "listed_count", "n", "n_tweets", "retweet_count", "statuses_count", "text", "user_id", "verified", "years_on_twitter", "description"))
 
 extract_features_ytweets <- function(x) {
   ## remove retweet text and counts
@@ -6,27 +6,27 @@ extract_features_ytweets <- function(x) {
   x$retweet_count[x$is_retweet] <- NA_integer_
 
   ## remove user level duplicates
-  x_usr <- dplyr::group_by(dplyr::filter(x, !duplicated(user_id)), user_id)
-
+  x_usr <- dplyr::filter(x, !duplicated(user_id))
+  x_usr <- dplyr::group_by(x_usr, user_id)
   ## group by user
   x <- dplyr::group_by(x, user_id)
 
   ## tweet features
-  status_text <- textfeatures::textfeatures(
-    dplyr::select(x, user_id, text = text))
-  names(status_text) <- paste0("status_text_", names(status_text))
+  status_text_df <- dplyr::select_(x, 'user_id', text = 'text')
+  status_text_df <- textfeatures::textfeatures(status_text_df)
+  names(status_text_df) <- paste0("status_text_", names(status_text_df))
 
-  description <- textfeatures::textfeatures(
-    dplyr::select(x_usr, user_id, text = description))
-  names(description) <- paste0("description_", names(description))
+  description_df <- dplyr::select_(x_usr, 'user_id', text = 'description')
+  description_df <- textfeatures::textfeatures(description_df)
+  names(description_df) <- paste0("description_", names(description_df))
 
-  location <- textfeatures::textfeatures(
-    dplyr::select(x_usr, user_id, text = location))
-  names(location) <- paste0("location_", names(location))
+  location_df <- dplyr::select_(x_usr, 'user_id', text = 'location')
+  location_df <- textfeatures::textfeatures(location_df)
+  names(location_df) <- paste0("location_", names(location_df))
 
-  name <- textfeatures::textfeatures(
-    dplyr::select(x_usr, user_id, text = name))
-  names(name) <- paste0("name_", names(name))
+  name_df <- dplyr::select_(x_usr, 'user_id', text = 'name')
+  name_df <- textfeatures::textfeatures(name_df)
+  names(name_df) <- paste0("name_", names(name_df))
 
   #all_nas <- function(x) all(is.na(x) | is.nan(x))
   #x <- dplyr::mutate_if(x, is.numeric, function(.) ifelse(all_nas(.), 0, .))
@@ -55,17 +55,17 @@ extract_features_ytweets <- function(x) {
       difftime(Sys.time(), account_created_at[1], units = "days")) / 365,
     tweets_per_year = n_tweets / (1 + years_on_twitter),
     ## i added one here so it wouldn't return NaN or undefined values (0 / x)
-    statuses_count  = max(c(0, statuses_count), na.rm = TRUE),
-    followers_count  = max(c(0, followers_count), na.rm = TRUE),
-    friends_count  = max(c(0, friends_count), na.rm = TRUE),
-    listed_count  = max(c(0, listed_count), na.rm = TRUE),
-    tweets_to_followers  = (statuses_count + 1) / (followers_count + 1),
-    statuses_rate  = (statuses_count + 1) / (years_on_twitter + .001),
+    statuses_count = max(c(0, statuses_count), na.rm = TRUE),
+    followers_count = max(c(0, followers_count), na.rm = TRUE),
+    friends_count = max(c(0, friends_count), na.rm = TRUE),
+    listed_count = max(c(0, listed_count), na.rm = TRUE),
+    tweets_to_followers = (statuses_count + 1) / (followers_count + 1),
+    statuses_rate = (statuses_count + 1) / (years_on_twitter + .001),
     ff_ratio = (followers_count + 1) / (friends_count + followers_count + 1)
   )
   x <- x[names(x) != "n"]
-  tibble::as_tibble(cbind(x, status_text, description, name, location),
-    validate = FALSE)
+  dplyr::bind_cols(x, status_text_df, description_df,
+    name_df, location_df)
 }
 
 train_model <- function(data, n_trees = 1000) {
@@ -133,17 +133,17 @@ extract_features_ntweets <- function(x) {
   ## remove user level duplicates
   x <- dplyr::filter(x, !duplicated(user_id))
   x <- dplyr::group_by(x, user_id)
-  description <- textfeatures::textfeatures(
+  description_df <- textfeatures::textfeatures(
     dplyr::select(x, user_id, text = description))
-  names(description) <- paste0("description_", names(description))
+  names(description_df) <- paste0("description_", names(description_df))
 
-  location <- textfeatures::textfeatures(
+  location_df <- textfeatures::textfeatures(
     dplyr::select(x, user_id, text = location))
-  names(location) <- paste0("location_", names(location))
+  names(location_df) <- paste0("location_", names(location_df))
 
-  name <- textfeatures::textfeatures(
+  name_df <- textfeatures::textfeatures(
     dplyr::select(x, user_id, text = name))
-  names(name) <- paste0("name_", names(name))
+  names(name_df) <- paste0("name_", names(name_df))
 
   x <- dplyr::summarise(x,
     favourites_count = max(c(0, favourites_count), na.rm = TRUE),
@@ -159,7 +159,6 @@ extract_features_ntweets <- function(x) {
     statuses_rate  = (statuses_count + 1) / (years_on_twitter + .001),
     ff_ratio = (followers_count + 1) / (friends_count + followers_count + 1)
   )
-  tibble::as_tibble(cbind(x, description, name, location),
-    validate = FALSE)
+  dplyr::bind_cols(x, description_df, name_df, location_df)
 }
 

@@ -14,12 +14,17 @@
 #' @export
 botornot <- function(x, fast = FALSE) UseMethod("botornot")
 
+#' Identical to \code{botornot}
+#' @rdname botornot
+#' @export
+botrnot <- function(...) botornot(...)
+
 #' @export
 botornot.data.frame <- function(x, fast = FALSE) {
   ## convert factors to char if necessary
   x <- convert_factors(x)
   ## merge users and tweets data
-  x <- rtweet_join(x)
+  x <- rtweet::join_rtweet(x)
   ## store screen names
   sn <- unique(x$screen_name)
   if (fast) {
@@ -51,7 +56,7 @@ botornot.factor <- function(x, fast = FALSE) {
 botornot.character <- function(x, fast = FALSE) {
   ## remove NA and duplicates
   x <- x[!is.na(x) & !duplicated(x)]
-  ## get most recent 200 tweets
+  ## get most recent 100 tweets
   x <- rtweet::get_timelines(x, n = 100)
   ## pass to next method
   botornot(x, fast = fast)
