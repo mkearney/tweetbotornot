@@ -1,6 +1,6 @@
-context("botornot.R")
+context("botrnot.R")
 
-test_that("botornot", {
+test_that("botrnot", {
   ## select users
   users <- c("realdonaldtrump", "netflix_bot",
     "kearneymw", "dataandme", "hadleywickham",

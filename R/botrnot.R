@@ -24,7 +24,7 @@ botornot.data.frame <- function(x, fast = FALSE) {
   ## convert factors to char if necessary
   x <- convert_factors(x)
   ## merge users and tweets data
-  x <- rtweet::join_rtweet(x)
+  x <- join_rtweet(x)
   ## store screen names
   sn <- unique(x[, c("user_id", "screen_name")])
   if (fast) {

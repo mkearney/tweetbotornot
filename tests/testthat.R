@@ -1,4 +1,4 @@
 library(testthat)
-library(botornot)
+library(botrnot)
 
-test_check("botornot")
+test_check("botrnot")

@@ -1,6 +1,6 @@
 Package: botrnot
 Title: Classify Twitter Users as Bot or Not
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: person("Michael Wayne", "Kearney", , 
     "kearneymw@missouri.edu", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-0730-4694"))
@@ -17,7 +17,7 @@ Imports:
     dplyr,
     gbm,
     rlang,
-    rtweet,
+    rtweet (>= 0.6.0),
     textfeatures,
     tibble
 Suggests: 
