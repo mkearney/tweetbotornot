@@ -58,20 +58,20 @@ data <- botornot(users)
 
 ## arrange by prob ests
 data[order(data$prob_bot), ]
-#> # A tibble: 11 x 2
-#>    user            prob_bot
-#>    <chr>              <dbl>
-#>  1 realDonaldTrump  0.00198
-#>  2 hadleywickham    0.00595
-#>  3 kearneymw        0.0182 
-#>  4 juliasilge       0.0577 
-#>  5 ma_salmon        0.0788 
-#>  6 hrbrmstr         0.0814 
-#>  7 dataandme        0.0886 
-#>  8 netflix_bot      0.978  
-#>  9 tidyversetweets  0.998  
-#> 10 mothgenerator    0.998  
-#> 11 American__Voter  0.999
+#> # A tibble: 11 x 3
+#>    screen_name     user_id            prob_bot
+#>    <chr>           <chr>                 <dbl>
+#>  1 realDonaldTrump 25073877            0.00198
+#>  2 hadleywickham   69133574            0.00595
+#>  3 kearneymw       2973406683          0.0190 
+#>  4 juliasilge      13074042            0.0577 
+#>  5 ma_salmon       2865404679          0.0788 
+#>  6 hrbrmstr        5685812             0.0814 
+#>  7 dataandme       3230388598          0.0886 
+#>  8 netflix_bot     1203840834          0.978  
+#>  9 tidyversetweets 935569091678691328  0.998  
+#> 10 mothgenerator   3277928935          0.998  
+#> 11 American__Voter 829792389925597184  0.999
 ```
 
 ### Integration with rtweet
@@ -91,20 +91,20 @@ data <- botornot(tmls)
 
 ## arrange by prob ests
 data[order(data$prob_bot), ]
-#> # A tibble: 11 x 2
-#>    user            prob_bot
-#>    <chr>              <dbl>
-#>  1 realDonaldTrump  0.00198
-#>  2 hadleywickham    0.00595
-#>  3 kearneymw        0.0182 
-#>  4 juliasilge       0.0577 
-#>  5 ma_salmon        0.0788 
-#>  6 hrbrmstr         0.0814 
-#>  7 dataandme        0.0886 
-#>  8 netflix_bot      0.978  
-#>  9 tidyversetweets  0.998  
-#> 10 mothgenerator    0.998  
-#> 11 American__Voter  0.999
+#> # A tibble: 11 x 3
+#>    screen_name     user_id            prob_bot
+#>    <chr>           <chr>                 <dbl>
+#>  1 realDonaldTrump 25073877            0.00198
+#>  2 hadleywickham   69133574            0.00595
+#>  3 kearneymw       2973406683          0.0190 
+#>  4 juliasilge      13074042            0.0577 
+#>  5 ma_salmon       2865404679          0.0788 
+#>  6 hrbrmstr        5685812             0.0814 
+#>  7 dataandme       3230388598          0.0886 
+#>  8 netflix_bot     1203840834          0.978  
+#>  9 tidyversetweets 935569091678691328  0.998  
+#> 10 mothgenerator   3277928935          0.998  
+#> 11 American__Voter 829792389925597184  0.999
 ```
 
 ### `fast = TRUE`
@@ -129,18 +129,18 @@ data <- botornot(users, fast = TRUE)
 
 ## arrange by prob ests
 data[order(data$prob_bot), ]
-#> # A tibble: 11 x 2
-#>    user            prob_bot
-#>    <chr>              <dbl>
-#>  1 hadleywickham    0.00230
-#>  2 ma_salmon        0.0418 
-#>  3 kearneymw        0.0439 
-#>  4 hrbrmstr         0.0774 
-#>  5 juliasilge       0.127  
-#>  6 dataandme        0.146  
-#>  7 realDonaldTrump  0.373  
-#>  8 netflix_bot      0.982  
-#>  9 tidyversetweets  0.999  
-#> 10 American__Voter  0.999  
-#> 11 mothgenerator    0.999
+#> # A tibble: 11 x 3
+#>    screen_name     user_id            prob_bot
+#>    <chr>           <chr>                 <dbl>
+#>  1 hadleywickham   69133574            0.00230
+#>  2 ma_salmon       2865404679          0.0418 
+#>  3 kearneymw       2973406683          0.0439 
+#>  4 hrbrmstr        5685812             0.0774 
+#>  5 juliasilge      13074042            0.127  
+#>  6 dataandme       3230388598          0.146  
+#>  7 realDonaldTrump 25073877            0.373  
+#>  8 netflix_bot     1203840834          0.982  
+#>  9 tidyversetweets 935569091678691328  0.999  
+#> 10 American__Voter 829792389925597184  0.999  
+#> 11 mothgenerator   3277928935          0.999
 ```
