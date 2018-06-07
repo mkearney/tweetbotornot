@@ -1,6 +1,6 @@
-Package: botrnot
+Package: tweetbotornot
 Title: Classify Twitter Users as Bot or Not
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: person("Michael Wayne", "Kearney", , 
     "kearneymw@missouri.edu", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-0730-4694"))
@@ -8,8 +8,8 @@ Description: Classify Twitter accounts as bot or not bot. The packagae uses
     a gradient boosted model, which was trained using thousands of real 
     automated (bot) and non-automated Twitter accounts, and returns estimated
     probabilities of whether supplied accounts are bots.
-URL: https://github.com/mkearney/botrnot
-BugReports: https://github.com/mkearney/botrnot/issues
+URL: https://github.com/mkearney/tweetbotornot
+BugReports: https://github.com/mkearney/tweetbotornot/issues
 License: MIT + file LICENSE
 Depends:
     R (>= 3.1.0)

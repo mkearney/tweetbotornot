@@ -6,9 +6,13 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 ```
 
-# botrnot <img width="150px" src="man/figures/logo.png" align="right" /> 
+# tweetbotornot <img width="150px" src="man/figures/logo.png" align="right" /> 
 
 An R package for classifying Twitter accounts as `bot or not`.
+
+## NOTE
+
+In order to avoid confusion, the package was renamed from "botrnot" to "tweetbotornot" in June 2018. This package should not be confused with the [botornot application](http://botornot.co/).
 
 ## Features
 
@@ -26,7 +30,7 @@ Install from Github.
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
-devtools::install_github("mkearney/botrnot")
+devtools::install_github("mkearney/tweetbotornot")
 ```
 
 ## API authorization
@@ -40,7 +44,7 @@ There's one function `botornot()`. Give it a vector of screen names or user IDs 
 
 ```{r}
 ## load package
-library(botrnot)
+library(tweetbotornot)
 
 ## select users
 users <- c("realdonaldtrump", "netflix_bot",

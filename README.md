@@ -1,7 +1,13 @@
 
-# botrnot <img width="150px" src="man/figures/logo.png" align="right" />
+# tweetbotornot <img width="150px" src="man/figures/logo.png" align="right" />
 
 An R package for classifying Twitter accounts as `bot or not`.
+
+## NOTE
+
+In order to avoid confusion, the package was renamed from “botrnot” to
+“tweetbotornot” in June 2018. This package should not be confused with
+the [botornot application](http://botornot.co/).
 
 ## Features
 
@@ -23,7 +29,7 @@ Install from Github.
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
-devtools::install_github("mkearney/botrnot")
+devtools::install_github("mkearney/tweetbotornot")
 ```
 
 ## API authorization
@@ -39,7 +45,7 @@ user IDs and let it go to work.
 
 ``` r
 ## load package
-library(botrnot)
+library(tweetbotornot)
 
 ## select users
 users <- c("realdonaldtrump", "netflix_bot",
@@ -55,16 +61,16 @@ data[order(data$prob_bot), ]
 #> # A tibble: 11 x 2
 #>    user            prob_bot
 #>    <chr>              <dbl>
-#>  1 hadleywickham    0.00238
-#>  2 realDonaldTrump  0.00389
-#>  3 kearneymw        0.0162 
-#>  4 ma_salmon        0.0363 
-#>  5 juliasilge       0.0529 
-#>  6 dataandme        0.0875 
-#>  7 hrbrmstr         0.151  
-#>  8 netflix_bot      0.971  
-#>  9 tidyversetweets  0.997  
-#> 10 mothgenerator    0.999  
+#>  1 realDonaldTrump  0.00198
+#>  2 hadleywickham    0.00595
+#>  3 kearneymw        0.0182 
+#>  4 juliasilge       0.0577 
+#>  5 ma_salmon        0.0788 
+#>  6 hrbrmstr         0.0814 
+#>  7 dataandme        0.0886 
+#>  8 netflix_bot      0.978  
+#>  9 tidyversetweets  0.998  
+#> 10 mothgenerator    0.998  
 #> 11 American__Voter  0.999
 ```
 
@@ -88,16 +94,16 @@ data[order(data$prob_bot), ]
 #> # A tibble: 11 x 2
 #>    user            prob_bot
 #>    <chr>              <dbl>
-#>  1 hadleywickham    0.00238
-#>  2 realDonaldTrump  0.00389
-#>  3 kearneymw        0.0162 
-#>  4 ma_salmon        0.0363 
-#>  5 juliasilge       0.0529 
-#>  6 dataandme        0.0875 
-#>  7 hrbrmstr         0.151  
-#>  8 netflix_bot      0.971  
-#>  9 tidyversetweets  0.997  
-#> 10 mothgenerator    0.999  
+#>  1 realDonaldTrump  0.00198
+#>  2 hadleywickham    0.00595
+#>  3 kearneymw        0.0182 
+#>  4 juliasilge       0.0577 
+#>  5 ma_salmon        0.0788 
+#>  6 hrbrmstr         0.0814 
+#>  7 dataandme        0.0886 
+#>  8 netflix_bot      0.978  
+#>  9 tidyversetweets  0.998  
+#> 10 mothgenerator    0.998  
 #> 11 American__Voter  0.999
 ```
 
@@ -126,15 +132,15 @@ data[order(data$prob_bot), ]
 #> # A tibble: 11 x 2
 #>    user            prob_bot
 #>    <chr>              <dbl>
-#>  1 hadleywickham    0.00316
-#>  2 ma_salmon        0.0357 
-#>  3 kearneymw        0.0379 
-#>  4 juliasilge       0.0604 
-#>  5 hrbrmstr         0.0677 
-#>  6 dataandme        0.236  
-#>  7 realDonaldTrump  0.415  
+#>  1 hadleywickham    0.00230
+#>  2 ma_salmon        0.0418 
+#>  3 kearneymw        0.0439 
+#>  4 hrbrmstr         0.0774 
+#>  5 juliasilge       0.127  
+#>  6 dataandme        0.146  
+#>  7 realDonaldTrump  0.373  
 #>  8 netflix_bot      0.982  
-#>  9 American__Voter  0.998  
-#> 10 tidyversetweets  0.998  
+#>  9 tidyversetweets  0.999  
+#> 10 American__Voter  0.999  
 #> 11 mothgenerator    0.999
 ```

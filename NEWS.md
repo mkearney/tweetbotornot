@@ -1,3 +1,7 @@
+# tweetbotornot 0.0.3
+
+* Renamed to tweetbotornot
+
 # botornot 0.0.1
 
 * Initial commit, featuring `botornot()` function and gradient boosted models
