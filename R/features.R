@@ -4,13 +4,13 @@ utils::globalVariables(c("account_created_at", "created_at", "favorite_count",
   "statuses_count", "text", "user_id", "verified", "years_on_twitter",
   "description", "location", "name"))
 
-
-
 sum_ <- function(x) sum(x, na.rm = TRUE)
 
 max_ <- function(x) max(x, na.rm = TRUE)
 
-grepl_ <- function(pat, x) grepl_(pat, x)
+mean_ <- function(x) mean(x, na.rm = TRUE)
+
+grepl_ <- function(pat, x) grepl(pat, x)
 
 #' @importFrom rlang .data
 extract_features_ytweets <- function(x) {
@@ -20,80 +20,67 @@ extract_features_ytweets <- function(x) {
 
   ## remove user level duplicates
   x_usr <- dplyr::filter(x, !duplicated(.data$user_id))
-  #x_usr <- dplyr::group_by(x_usr, user_id)
-  ## group by user
-  #x <- dplyr::group_by(x, user_id)
 
   ## tweet features
-  txt_df <- dplyr::select(x, user_id = .data$user_id, .data$text)
-  txt_df <- textfeatures::textfeatures(txt_df)
+  txt_df <- textfeatures::textfeatures(x$text)
   names(txt_df) <- paste0("txt_", names(txt_df))
-  names(txt_df)[1] <- "user_id"
 
   ## base64 version
-  b64_df <- dplyr::select(x, user_id = .data$user_id, .data$text)
-  b64_df$text <- textfeatures:::char_to_b64(b64_df$text)
-  b64_df <- textfeatures::textfeatures(b64_df)
+  b64_df <- textfeatures::textfeatures(textfeatures:::char_to_b64(x$text))
   names(b64_df) <- paste0("b64_", names(b64_df))
-  names(b64_df)[1] <- "user_id"
 
-  dsc_df <- dplyr::select(x_usr, user_id = .data$user_id,
-    text = .data$description)
-  dsc_df <- textfeatures::textfeatures(dsc_df)
+  dsc_df <- textfeatures::textfeatures(x$description)
   names(dsc_df) <- paste0("dsc_", names(dsc_df))
-  names(dsc_df)[1] <- "user_id"
 
-  loc_df <- dplyr::select(x_usr, user_id = .data$user_id, text = .data$location)
-  loc_df <- textfeatures::textfeatures(loc_df)
-  names(loc_df) <- paste0("location_", names(loc_df))
-  names(loc_df)[1] <- "user_id"
+  loc_df <- textfeatures::textfeatures(x$location)
+  names(loc_df) <- paste0("loc_", names(loc_df))
 
-  name_df <- dplyr::select(x_usr, user_id = .data$user_id, text = .data$name)
-  name_df <- textfeatures::textfeatures(name_df)
-  names(name_df) <- paste0("name_", names(name_df))
-  names(name_df)[1] <- "user_id"
+  nm_df <- textfeatures::textfeatures(x$name)
+  names(nm_df) <- paste0("nm_", names(nm_df))
 
-  x <- dplyr::summarise(x,
-    n_sincelast = count_mean(since_last(.data$created_at)),
-    n_timeofday = count_mean(hourofweekday(.data$created_at)),
-    n = n(),
-    n_retweets = sum_(.data$is_retweet),
-    n_quotes = sum_(.data$is_quote),
-    retweet_count = mean(c(0, .data$retweet_count)),
-    favorite_count = mean(c(0, .data$favorite_count)),
-    favourites_count = max_(c(0, .data$favourites_count)),
-    n_tweets = sum_(!is_retweet & !.data$is_quote),
-    iphone = sum_(grepl_("iphone", .data$source)) / .data$n,
-    webclient = sum_(grepl_("web client", .data$source)) / .data$n,
-    android = sum_(grepl_("android", .data$source)) / .data$n,
-    hootsuite = sum_(grepl_("hootsuite", .data$source)) / .data$n,
-    lite = sum_(grepl_("twitter lite", .data$source)) / .data$n,
-    ipad = sum_(grepl_("for iPad", .data$source)) / .data$n,
-    google = sum_(grepl_("google", .data$source)) / .data$n,
-    ifttt = sum_(grepl_("IFTTT", .data$source)) / .data$n,
-    facebook = sum_(grepl_("facebook", .data$source)) / .data$n,
-    verified = as.integer(.data$verified[1]),
-    years_on_twitter = as.numeric(
-      difftime(Sys.time(), .data$account_created_at[1], units = "days")) / 365,
-    tweets_per_year = .data$n_tweets / (1 + .data$years_on_twitter),
-    ## i added one here so it wouldn't return NaN or undefined values (0 / x)
-    statuses_count = max_(c(0, .data$statuses_count)),
-    followers_count = max_(c(0, .data$followers_count)),
-    friends_count = max_(c(0, .data$friends_count)),
-    listed_count = max_(c(0, .data$listed_count)),
-    tweets_to_followers = (.data$statuses_count + 1) /
-      (.data$followers_count + 1),
-    statuses_rate = (.data$statuses_count + 1) /
-      (.data$years_on_twitter + .001),
-    ff_ratio = (.data$followers_count + 1) /
-      (.data$friends_count + .data$followers_count + 1)
-  )
+  x <- x %>%
+    dplyr::group_by(user_id) %>%
+    dplyr::summarise(
+      n_sincelast = count_mean(since_last(.data$created_at)),
+      n_timeofday = count_mean(hourofweekday(.data$created_at)),
+      n = n(),
+      n_retweets = sum_(.data$is_retweet),
+      n_quotes = sum_(.data$is_quote),
+      retweet_count = mean_(c(0, .data$retweet_count)),
+      favorite_count = mean_(c(0, .data$favorite_count)),
+      favourites_count = max_(c(0, .data$favourites_count)),
+      n_tweets = sum_(!.data$is_retweet & !.data$is_quote),
+      iphone = sum_(grepl_("iphone", .data$source)) / .data$n,
+      webclient = sum_(grepl_("web client", .data$source)) / .data$n,
+      android = sum_(grepl_("android", .data$source)) / .data$n,
+      hootsuite = sum_(grepl_("hootsuite", .data$source)) / .data$n,
+      lite = sum_(grepl_("twitter lite", .data$source)) / .data$n,
+      ipad = sum_(grepl_("for iPad", .data$source)) / .data$n,
+      google = sum_(grepl_("google", .data$source)) / .data$n,
+      ifttt = sum_(grepl_("IFTTT", .data$source)) / .data$n,
+      facebook = sum_(grepl_("facebook", .data$source)) / .data$n,
+      verified = as.integer(.data$verified[1]),
+      years_on_twitter = as.numeric(
+        difftime(Sys.time(), .data$account_created_at[1], units = "days")) / 365,
+      tweets_per_year = .data$n_tweets / (1 + .data$years_on_twitter),
+      ## i added one here so it wouldn't return NaN or undefined values (0 / x)
+      statuses_count = max_(c(0, .data$statuses_count)),
+      followers_count = max_(c(0, .data$followers_count)),
+      friends_count = max_(c(0, .data$friends_count)),
+      listed_count = max_(c(0, .data$listed_count)),
+      tweets_to_followers = (.data$statuses_count + 1) /
+        (.data$followers_count + 1),
+      statuses_rate = (.data$statuses_count + 1) /
+        (.data$years_on_twitter + .001),
+      ff_ratio = (.data$followers_count + 1) /
+        (.data$friends_count + .data$followers_count + 1)
+    )
   x <- x[names(x) != "n"]
-  x <- dplyr::left_join(x, txt_df, by = "user_id")
-  x <- dplyr::left_join(x, b64_df, by = "user_id")
-  x <- dplyr::left_join(x, dsc_df, by = "user_id")
-  x <- dplyr::left_join(x, name_df, by = "user_id")
-  dplyr::left_join(loc_df, by = "user_id")
+  x <- cbind(x, txt_df[-1])
+  x <- cbind(x, b64_df[-1])
+  x <- cbind(x, dsc_df[-1])
+  x <- cbind(x, nm_df[-1])
+  cbind(x, loc_df[-1])
 }
 
 train_model <- function(data, n_trees = 1000) {

@@ -3,6 +3,8 @@
 S3method(botornot,character)
 S3method(botornot,data.frame)
 S3method(botornot,factor)
+export("%>%")
 export(botornot)
 export(tweetbotornot)
+importFrom(magrittr,"%>%")
 importFrom(rlang,.data)

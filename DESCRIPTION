@@ -19,7 +19,8 @@ Imports:
     rlang,
     rtweet (>= 0.6.0),
     textfeatures,
-    tibble
+    tibble,
+    magrittr
 Suggests: 
     knitr,
     roxygen2,
@@ -27,4 +28,4 @@ Suggests:
 Encoding: UTF-8
 LazyData: yes
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.0

@@ -7,7 +7,7 @@
 \usage{
 botornot(x, fast = FALSE)
 
-tweetbotornot(...)
+tweetbotornot(x, fast = FALSE)
 }
 \arguments{
 \item{x}{Object to be classified. Can be user IDs, screen names, or
