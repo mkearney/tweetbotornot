@@ -45,11 +45,11 @@ botornot.data.frame <- function(x, fast = FALSE) {
   ## classify data
   p <- classify_data(x, m)
   sn <- su$screen_name[match(su$user_id, x$user_id)]
-  ui <- su$user_id[match(su$user_id, x$user_id)]
+  #ui <- su$user_id[match(x$user_id, ui$user_id)]
   ## return as tibble
   tibble::data_frame(
     screen_name = sn,
-    user_id = ui,
+    user_id = x$user_id,
     prob_bot = p)
 }
 
