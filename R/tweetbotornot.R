@@ -22,10 +22,6 @@ tweetbotornot <- function(x, fast = FALSE) botornot(x, fast = FALSE)
 
 #' @export
 botornot.data.frame <- function(x, fast = FALSE) {
-  ## convert factors to char if necessary
-  #x <- convert_factors(x)
-  ## merge users and tweets data
-  #x <- join_rtweet(x)
   ## store screen and user names
   su <- unique(x[, c("user_id", "screen_name")])
   if (fast) {
@@ -45,10 +41,11 @@ botornot.data.frame <- function(x, fast = FALSE) {
     m$var.names <- sub("^status_text_", "txt_", m$var.names)
     m$var.names <- sub("^name_", "nm_", m$var.names)
   }
+
   ## classify data
   p <- classify_data(x, m)
-  sn <- su$screen_name[match(x$user_id, su$user_id)]
-  ui <- su$user_id[match(x$user_id, su$user_id)]
+  sn <- su$screen_name[match(su$user_id, x$user_id)]
+  ui <- su$user_id[match(su$user_id, x$user_id)]
   ## return as tibble
   tibble::data_frame(
     screen_name = sn,

@@ -22,28 +22,38 @@ extract_features_ytweets <- function(x) {
   x_usr <- dplyr::filter(x, !duplicated(.data$user_id))
 
   ## tweet features
-  txt_df <- textfeatures::textfeatures(x$text)
-  names(txt_df) <- paste0("txt_", names(txt_df))
+  txt_df <- tf(
+    dplyr::select(x[!is.na(x$text), ], user_id = user_id, text = text))
+  names(txt_df)[-1] <- paste0("txt_", names(txt_df)[-1])
 
   ## base64 version
-  b64_df <- textfeatures::textfeatures(textfeatures:::char_to_b64(x$text))
-  names(b64_df) <- paste0("b64_", names(b64_df))
+  b64_df <- tf(
+    dplyr::select(x[!is.na(x$text), ], user_id = user_id, text = text))
+  names(b64_df)[-1] <- paste0("b64_", names(b64_df)[-1])
 
-  dsc_df <- textfeatures::textfeatures(x$description)
-  names(dsc_df) <- paste0("dsc_", names(dsc_df))
+  dsc_df <- tf(
+    dplyr::select(x_usr, user_id = user_id, text = description))
+  names(dsc_df)[-1] <- paste0("dsc_", names(dsc_df)[-1])
 
-  loc_df <- textfeatures::textfeatures(x$location)
-  names(loc_df) <- paste0("loc_", names(loc_df))
+  loc_df <- tf(
+    dplyr::select(x_usr, user_id = user_id, text = location))
+  names(loc_df)[-1] <- paste0("loc_", names(loc_df)[-1])
 
-  nm_df <- textfeatures::textfeatures(x$name)
-  names(nm_df) <- paste0("nm_", names(nm_df))
+  nm_df <- tf(
+    dplyr::select(x_usr, user_id = user_id, text = name))
+  names(nm_df)[-1] <- paste0("nm_", names(nm_df)[-1])
+
+  dd1 <- cbind(txt_df, b64_df[-1])
+  dd2 <- cbind(dsc_df, loc_df[-1])
+  dd2 <- cbind(dd2, nm_df[-1])
+  dd <- cbind(dd1, dd2[-1])
 
   x <- x %>%
     dplyr::group_by(user_id) %>%
     dplyr::summarise(
       n_sincelast = count_mean(since_last(.data$created_at)),
       n_timeofday = count_mean(hourofweekday(.data$created_at)),
-      n = n(),
+      n = dplyr::n(),
       n_retweets = sum_(.data$is_retweet),
       n_quotes = sum_(.data$is_quote),
       retweet_count = mean_(c(0, .data$retweet_count)),
@@ -76,11 +86,9 @@ extract_features_ytweets <- function(x) {
         (.data$friends_count + .data$followers_count + 1)
     )
   x <- x[names(x) != "n"]
-  x <- cbind(x, txt_df[-1])
-  x <- cbind(x, b64_df[-1])
-  x <- cbind(x, dsc_df[-1])
-  x <- cbind(x, nm_df[-1])
-  cbind(x, loc_df[-1])
+  dplyr::full_join(x, dd, by = "user_id") %>%
+    dplyr::group_by(user_id) %>%
+    dplyr::summarise_all(mean, na.rm = TRUE)
 }
 
 train_model <- function(data, n_trees = 1000) {
@@ -130,15 +138,17 @@ percent_correct <- function(data, m, n_trees = 500) {
 #' @return Vector of predictions expressed as probabilities of accounts being
 #'   bots.
 classify_data <- function(x, model) {
-  best.iter <- gbm::gbm.perf(model, method = "cv", plot.it = FALSE)
-  gbm::predict.gbm(model, n.trees = best.iter, newdata = x,
+  ##best.iter <- gbm::gbm.perf(model, method = "cv", plot.it = FALSE)
+  gbm::predict.gbm(model, n.trees = 700, newdata = x,
     type = "response")
 }
 
 
 
 
-
+tf <- function(x) {
+  textfeatures::textfeatures(x, normalize = FALSE, word_dims = 0)
+}
 
 
 
@@ -149,19 +159,19 @@ extract_features_ntweets <- function(x) {
   ## remove user level duplicates
   x <- dplyr::filter(x, !duplicated(user_id))
   x <- dplyr::group_by(x, user_id)
-  description_df <- textfeatures::textfeatures(
+  description_df <- tf(
     dplyr::select(x, user_id, text = description))
   names(description_df) <- paste0("description_", names(description_df))
 
-  location_df <- textfeatures::textfeatures(
+  location_df <- tf(
     dplyr::select(x, user_id, text = location))
   names(location_df) <- paste0("location_", names(location_df))
 
-  name_df <- textfeatures::textfeatures(
+  name_df <- tf(
     dplyr::select(x, user_id, text = name))
   names(name_df) <- paste0("name_", names(name_df))
 
-  x <- dplyr::summarise(x,
+  x <- dplyr::summarise(dplyr::group_by(x, user_id),
     favourites_count = max_(c(0, favourites_count)),
     verified = as.integer(verified[1]),
     years_on_twitter = as.numeric(
