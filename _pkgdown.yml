@@ -1,0 +1,9 @@
+url: https://tweetbotornot.mikewk.com
+
+authors:
+  Michael W. Kearney:
+    href: https://mikewk.com
+navbar:
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/mkearney/tweetbotornot

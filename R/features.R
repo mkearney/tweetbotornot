@@ -159,32 +159,63 @@ extract_features_ntweets <- function(x) {
   ## remove user level duplicates
   x <- dplyr::filter(x, !duplicated(user_id))
   x <- dplyr::group_by(x, user_id)
-  description_df <- tf(
-    dplyr::select(x, user_id, text = description))
-  names(description_df) <- paste0("description_", names(description_df))
+  ## remove user level duplicates
+  #x_usr <- dplyr::filter(x, !duplicated(.data$user_id))
 
-  location_df <- tf(
-    dplyr::select(x, user_id, text = location))
-  names(location_df) <- paste0("location_", names(location_df))
+  ## tweet features
+  txt_df <- tf(
+    dplyr::select(x[!is.na(x$text), ], user_id = user_id, text = text))
+  names(txt_df)[-1] <- paste0("txt_", names(txt_df)[-1])
+  txt_df[1:ncol(txt_df)] <- apply(txt_df, 2, function(.x)
+    ifelse(is.na(.x), 0, .x))
 
-  name_df <- tf(
-    dplyr::select(x, user_id, text = name))
-  names(name_df) <- paste0("name_", names(name_df))
+  ## base64 version
+  b64_df <- tf(
+    dplyr::select(x[!is.na(x$text), ], user_id = user_id, text = text))
+  names(b64_df)[-1] <- paste0("b64_", names(b64_df)[-1])
+  b64_df[1:ncol(b64_df)] <- apply(b64_df, 2, function(.x)
+    ifelse(is.na(.x), 0, .x))
 
-  x <- dplyr::summarise(dplyr::group_by(x, user_id),
-    favourites_count = max_(c(0, favourites_count)),
-    verified = as.integer(verified[1]),
-    years_on_twitter = as.numeric(
-      difftime(Sys.time(), account_created_at[1], units = "days")) / 365,
-    ## i added one here so it wouldn't return NaN or undefined values (0 / x)
-    statuses_count  = max_(c(0, statuses_count)),
-    followers_count  = max_(c(0, followers_count)),
-    friends_count  = max_(c(0, friends_count)),
-    listed_count  = max_(c(0, listed_count)),
-    tweets_to_followers  = (statuses_count + 1) / (followers_count + 1),
-    statuses_rate  = (statuses_count + 1) / (years_on_twitter + .001),
-    ff_ratio = (followers_count + 1) / (friends_count + followers_count + 1)
-  )
-  dplyr::bind_cols(x, description_df, name_df, location_df)
+  dsc_df <- tf(
+    dplyr::select(x, user_id = user_id, text = description))
+  names(dsc_df)[-1] <- paste0("dsc_", names(dsc_df)[-1])
+  dsc_df[1:ncol(dsc_df)] <- apply(dsc_df, 2, function(.x)
+    ifelse(is.na(.x), 0, .x))
+
+  loc_df <- tf(
+    dplyr::select(x, user_id = user_id, text = location))
+  names(loc_df)[-1] <- paste0("loc_", names(loc_df)[-1])
+  loc_df[1:ncol(loc_df)] <- apply(loc_df, 2, function(.x)
+    ifelse(is.na(.x), 0, .x))
+
+  nm_df <- tf(
+    dplyr::select(x, user_id = user_id, text = name))
+  names(nm_df)[-1] <- paste0("nm_", names(nm_df)[-1])
+  nm_df[1:ncol(nm_df)] <- apply(nm_df, 2, function(.x)
+    ifelse(is.na(.x), 0, .x))
+
+
+  dd1 <- cbind(txt_df, b64_df[-1])
+  dd2 <- cbind(dsc_df, loc_df[-1])
+  dd2 <- cbind(dd2, nm_df[-1])
+  dd <- dplyr::left_join(dd1, dd2, by = "user_id")
+
+  x <- x %>%
+    dplyr::group_by(user_id) %>%
+    dplyr::summarise(
+      favourites_count = max_(c(0, favourites_count)),
+      verified = as.integer(verified[1]),
+      years_on_twitter = as.numeric(
+        difftime(Sys.time(), account_created_at[1], units = "days")) / 365,
+      ## i added one here so it wouldn't return NaN or undefined values (0 / x)
+      statuses_count  = max_(c(0, statuses_count)),
+      followers_count  = max_(c(0, followers_count)),
+      friends_count  = max_(c(0, friends_count)),
+      listed_count  = max_(c(0, listed_count)),
+      tweets_to_followers  = (statuses_count + 1) / (followers_count + 1),
+      statuses_rate  = (statuses_count + 1) / (years_on_twitter + .001),
+      ff_ratio = (followers_count + 1) / (friends_count + followers_count + 1)
+    )
+  dplyr::left_join(x, dd, by = "user_id")
 }
 
