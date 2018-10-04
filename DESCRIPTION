@@ -4,8 +4,8 @@ Version: 0.1.0
 Authors@R: person("Michael W.", "Kearney", , 
     "kearneymw@missouri.edu", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-0730-4694"))
-Description: Classify Twitter accounts as bot or not bot. The packagae uses 
-    a gradient boosted model, which was trained using thousands of real 
+Description: Classify Twitter accounts as bot or not bot. The package uses 
+    a generalized boosted model, which was trained using thousands of real 
     automated (bot) and non-automated Twitter accounts, and returns estimated
     probabilities of whether supplied accounts are bots.
 URL: https://tweetbotornot.mikewk.com
@@ -24,7 +24,8 @@ Imports:
 Suggests: 
     knitr,
     roxygen2,
-    testthat
+    testthat,
+    covr
 Encoding: UTF-8
 LazyData: yes
 Roxygen: list(markdown = TRUE)

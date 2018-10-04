@@ -3,16 +3,16 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>", eval = FALSE)
 ```
 
-# tweetbotornot <img width="150px" src="man/figures/logo.png" align="right" /> 
+# tweetbotornot <img width="160px" src="man/figures/logo.png" align="right" /> 
+
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Travis build status](https://travis-ci.org/mkearney/tweetbotornot.svg?branch=master)](https://travis-ci.org/mkearney/tweetbotornot)
+[![Coverage status](https://codecov.io/gh/mkearney/tweetbotornot/branch/master/graph/badge.svg)](https://codecov.io/github/mkearney/tweetbotornot?branch=master)
 
 An R package for classifying Twitter accounts as `bot or not`.
-
-## NOTE
-
-In order to avoid confusion, the package was renamed from "botrnot" to "tweetbotornot" in June 2018. This package should not be confused with the [botornot application](http://botornot.co/).
 
 ## Features
 
@@ -26,7 +26,7 @@ Overall, the **fast model** is correct 91.9% of the time.
 
 Install from CRAN:
 
-```{r, eval=FALSE}
+``` r
 ## install from CRAN
 install.packages("tweetbotornot")
 ```
@@ -34,7 +34,7 @@ install.packages("tweetbotornot")
 
 Install the development version from Github:
 
-```{r, eval=FALSE}
+``` r
 ## install remotes if not already
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
@@ -51,7 +51,8 @@ machine to make authorized requests, you'll either need to be signed into Twitte
 
 ## Usage
 
-There's one function `botornot()`. Give it a vector of screen names or user IDs and let it go to work.
+There's one function `tweetbotornot()` (technically there's also `botornot()`, but it does the same exact thing). 
+Give it a vector of screen names or user IDs and let it go to work.
 
 ```{r}
 ## load package
@@ -64,10 +65,24 @@ users <- c("realdonaldtrump", "netflix_bot",
   "American__Voter", "mothgenerator", "hrbrmstr")
 
 ## get botornot estimates
-data <- botornot(users)
+data <- tweetbotornot(users)
 
 ## arrange by prob ests
 data[order(data$prob_bot), ]
+#> # A tibble: 11 x 3
+#>    screen_name     user_id            prob_bot
+#>    <chr>           <chr>                 <dbl>
+#>  1 hadleywickham   69133574            0.00754
+#>  2 realDonaldTrump 25073877            0.00995
+#>  3 kearneymw       2973406683          0.0607 
+#>  4 ma_salmon       2865404679          0.150  
+#>  5 juliasilge      13074042            0.162  
+#>  6 dataandme       3230388598          0.227  
+#>  7 hrbrmstr        5685812             0.320  
+#>  8 netflix_bot     1203840834          0.978  
+#>  9 tidyversetweets 935569091678691328  0.997  
+#> 10 mothgenerator   3277928935          0.998  
+#> 11 American__Voter 829792389925597184  1.000  
 ```
 
 ### Integration with rtweet
@@ -75,9 +90,6 @@ data[order(data$prob_bot), ]
 The `botornot()` function also accepts data returned by [rtweet](http://rtweet.info) functions.
 
 ```{r}
-## load rtweet
-library(rtweet)
-
 ## get most recent 100 tweets from each user
 tmls <- get_timelines(users, n = 100)
 
@@ -86,6 +98,20 @@ data <- botornot(tmls)
 
 ## arrange by prob ests
 data[order(data$prob_bot), ]
+#> # A tibble: 11 x 3
+#>    screen_name     user_id            prob_bot
+#>    <chr>           <chr>                 <dbl>
+#>  1 hadleywickham   69133574            0.00754
+#>  2 realDonaldTrump 25073877            0.00995
+#>  3 kearneymw       2973406683          0.0607 
+#>  4 ma_salmon       2865404679          0.150  
+#>  5 juliasilge      13074042            0.162  
+#>  6 dataandme       3230388598          0.227  
+#>  7 hrbrmstr        5685812             0.320  
+#>  8 netflix_bot     1203840834          0.978  
+#>  9 tidyversetweets 935569091678691328  0.997  
+#> 10 mothgenerator   3277928935          0.998  
+#> 11 American__Voter 829792389925597184  1.000  
 ```
 
 ### `fast = TRUE`
@@ -100,4 +126,24 @@ data <- botornot(users, fast = TRUE)
 
 ## arrange by prob ests
 data[order(data$prob_bot), ]
+#> # A tibble: 11 x 3
+#>    screen_name     user_id            prob_bot
+#>    <chr>           <chr>                 <dbl>
+#>  1 hadleywickham   69133574            0.00185
+#>  2 kearneymw       2973406683          0.0415 
+#>  3 ma_salmon       2865404679          0.0661 
+#>  4 dataandme       3230388598          0.0965 
+#>  5 juliasilge      13074042            0.112  
+#>  6 hrbrmstr        5685812             0.121  
+#>  7 realDonaldTrump 25073877            0.368  
+#>  8 netflix_bot     1203840834          0.978  
+#>  9 tidyversetweets 935569091678691328  0.998  
+#> 10 mothgenerator   3277928935          0.999  
+#> 11 American__Voter 829792389925597184  0.999  
 ```
+
+
+
+## NOTE
+
+In order to avoid confusion, the package was renamed from "botrnot" to "tweetbotornot" in June 2018. This package should not be confused with the [botornot application](http://botornot.co/).

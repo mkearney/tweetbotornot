@@ -1,3 +1,6 @@
+^codecov\.yml$
+^\.travis\.yml$
+^pkgdown$
 ^docs$
 ^_pkgdown\.yml$
 ^\.Rproj\.user$
