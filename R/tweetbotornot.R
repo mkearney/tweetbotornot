@@ -22,8 +22,9 @@ tweetbotornot <- function(x, fast = FALSE) botornot(x, fast = FALSE)
 
 #' @export
 botornot.data.frame <- function(x, fast = FALSE) {
+  stopifnot(nrow(x) > 0, "user_id" %in% names(x))
   ## store screen and user names
-  su <- unique(x[, c("user_id", "screen_name")])
+  uu <- x[!duplicated(x$user_id), ]
   if (fast) {
     ## extract features
     x <- extract_features_ntweets(x)
@@ -44,12 +45,12 @@ botornot.data.frame <- function(x, fast = FALSE) {
 
   ## classify data
   p <- classify_data(x, m)
-  sn <- su$screen_name[match(su$user_id, x$user_id)]
-  #ui <- su$user_id[match(x$user_id, ui$user_id)]
+  ## rearrange ot match uu
+  p <- p[match(uu$user_id, x$user_id)]
   ## return as tibble
   tibble::data_frame(
-    screen_name = sn,
-    user_id = x$user_id,
+    screen_name = uu$screen_name,
+    user_id = uu$user_id,
     prob_bot = p)
 }
 
