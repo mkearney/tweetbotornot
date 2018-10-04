@@ -18,7 +18,12 @@ botornot <- function(x, fast = FALSE) UseMethod("botornot")
 #' @rdname botornot
 #' @inheritParams botornot
 #' @export
-tweetbotornot <- function(x, fast = FALSE) botornot(x, fast = FALSE)
+tweetbotornot <- function(x, fast = FALSE) UseMethod("tweetbotornot")
+
+#' @export
+tweetbotornot.default <- function(x, fast = FALSE) {
+  botornot(x, fast = fast)
+}
 
 #' @export
 botornot.data.frame <- function(x, fast = FALSE) {
