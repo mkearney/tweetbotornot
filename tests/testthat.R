@@ -1,4 +1,4 @@
 library(testthat)
-library(botrnot)
+library(tweetbotornot)
 
-test_check("botrnot")
+test_check("tweetbotornot")
