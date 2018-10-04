@@ -95,78 +95,84 @@
 <div id="install" class="section level2">
 <h2 class="hasAnchor">
 <a href="#install" class="anchor"></a>Install</h2>
-<p>Install from Github.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">"devtools"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="kw">install.packages</span>(<span class="st">"devtools"</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">}</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"mkearney/tweetbotornot"</span>)</a></code></pre></div>
+<p>Install from CRAN:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">## install from CRAN</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">install.packages</span>(<span class="st">"tweetbotornot"</span>)</a></code></pre></div>
+<p>Install the development version from Github:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## install remotes if not already</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">"remotes"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="kw">install.packages</span>(<span class="st">"remotes"</span>)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">## install tweetbotornot from github</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"mkearney/tweetbotornot"</span>)</a></code></pre></div>
 </div>
 <div id="api-authorization" class="section level2">
 <h2 class="hasAnchor">
 <a href="#api-authorization" class="anchor"></a>API authorization</h2>
-<p>Users must be authorized in order to interact with Twitter’s API. To setup your machine for authorized request, <a href="http://rtweet.info/articles/auth.html">see these instructions provided in the rtweet package</a>.</p>
+<p>Users must be authorized in order to interact with Twitter’s API. To setup your machine to make authorized requests, you’ll either need to be signed into Twitter and working in an interactive session of R–the browser will open asking you to authorize the rtweet client (rstats2twitter)–or you’ll need to create an app (and have a developer account) and your own API token. The latter has the benefit of (a) having sufficient permissions for write-acess and DM (direct messages) read-access levels and (b) more stability if Twitter decides to shut down <span class="citation">[@kearneymw]</span>(<a href="https://twitter.com/kearneymw" class="uri">https://twitter.com/kearneymw</a>)’s access to Twitter (I try to be very responsible these days, but Twitter isn’t always friendly to academic use cases). To create an app and your own Twitter token, <a href="http://rtweet.info/articles/auth.html">see these instructions provided in the rtweet package</a>.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>There’s one function <code><a href="reference/botornot.html">botornot()</a></code>. Give it a vector of screen names or user IDs and let it go to work.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## load package</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">library</span>(tweetbotornot)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">## select users</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">users &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"realdonaldtrump"</span>, <span class="st">"netflix_bot"</span>,</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">  <span class="st">"kearneymw"</span>, <span class="st">"dataandme"</span>, <span class="st">"hadleywickham"</span>,</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">  <span class="st">"ma_salmon"</span>, <span class="st">"juliasilge"</span>, <span class="st">"tidyversetweets"</span>, </a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">  <span class="st">"American__Voter"</span>, <span class="st">"mothgenerator"</span>, <span class="st">"hrbrmstr"</span>)</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">## get botornot estimates</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(users)</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">## arrange by prob ests</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; # A tibble: 11 x 3</span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt;    screen_name     user_id            prob_bot</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                 &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt;  1 mothgenerator   69133574            0.00542</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt;  2 hadleywickham   25073877            0.00963</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt;  3 American__Voter 2973406683          0.0345 </span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt;  4 ma_salmon       2865404679          0.0744 </span></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt;  5 realDonaldTrump 13074042            0.318  </span></a>
-<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt;  6 hrbrmstr        5685812             0.330  </span></a>
-<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt;  7 dataandme       3230388598          0.361  </span></a>
-<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt;  8 kearneymw       1203840834          0.978  </span></a>
-<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.997  </span></a>
-<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#&gt; 10 netflix_bot     3277928935          0.998  </span></a>
-<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt; 11 juliasilge      829792389925597184  1.000</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## load package</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">library</span>(tweetbotornot)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## select users</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">users &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"realdonaldtrump"</span>, <span class="st">"netflix_bot"</span>,</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">  <span class="st">"kearneymw"</span>, <span class="st">"dataandme"</span>, <span class="st">"hadleywickham"</span>,</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">  <span class="st">"ma_salmon"</span>, <span class="st">"juliasilge"</span>, <span class="st">"tidyversetweets"</span>, </a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">  <span class="st">"American__Voter"</span>, <span class="st">"mothgenerator"</span>, <span class="st">"hrbrmstr"</span>)</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">## get botornot estimates</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(users)</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">## arrange by prob ests</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; # A tibble: 11 x 3</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt;    screen_name     user_id            prob_bot</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                 &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;  1 hadleywickham   69133574            0.00754</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt;  2 realDonaldTrump 25073877            0.00995</span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt;  3 kearneymw       2973406683          0.0607 </span></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt;  4 ma_salmon       2865404679          0.150  </span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt;  5 juliasilge      13074042            0.162  </span></a>
+<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt;  6 dataandme       3230388598          0.227  </span></a>
+<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt;  7 hrbrmstr        5685812             0.320  </span></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt;  8 netflix_bot     1203840834          0.978  </span></a>
+<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.997  </span></a>
+<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">#&gt; 10 mothgenerator   3277928935          0.998  </span></a>
+<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt; 11 American__Voter 829792389925597184  1.000</span></a></code></pre></div>
 <div id="integration-with-rtweet" class="section level3">
 <h3 class="hasAnchor">
 <a href="#integration-with-rtweet" class="anchor"></a>Integration with rtweet</h3>
 <p>The <code><a href="reference/botornot.html">botornot()</a></code> function also accepts data returned by <a href="http://rtweet.info">rtweet</a> functions.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## load rtweet</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">library</span>(rtweet)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## get most recent 100 tweets from each user</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">tmls &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/rtweet/topics/get_timeline">get_timelines</a></span>(users, <span class="dt">n =</span> <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">## pass the returned data to botornot()</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(tmls)</a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">## arrange by prob ests</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; # A tibble: 11 x 3</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt;    screen_name     user_id            prob_bot</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                 &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt;  1 mothgenerator   69133574            0.00542</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt;  2 hadleywickham   25073877            0.00963</span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;  3 American__Voter 2973406683          0.0345 </span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;  4 ma_salmon       2865404679          0.0744 </span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt;  5 realDonaldTrump 13074042            0.318  </span></a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt;  6 hrbrmstr        5685812             0.330  </span></a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt;  7 dataandme       3230388598          0.361  </span></a>
-<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt;  8 kearneymw       1203840834          0.978  </span></a>
-<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.997  </span></a>
-<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt; 10 netflix_bot     3277928935          0.998  </span></a>
-<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt; 11 juliasilge      829792389925597184  1.000</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## load rtweet</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">library</span>(rtweet)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">## get most recent 100 tweets from each user</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">tmls &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/rtweet/topics/get_timeline">get_timelines</a></span>(users, <span class="dt">n =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">## pass the returned data to botornot()</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(tmls)</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">## arrange by prob ests</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; # A tibble: 11 x 3</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;    screen_name     user_id            prob_bot</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                 &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt;  1 hadleywickham   69133574            0.00754</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt;  2 realDonaldTrump 25073877            0.00995</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt;  3 kearneymw       2973406683          0.0607 </span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt;  4 ma_salmon       2865404679          0.150  </span></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt;  5 juliasilge      13074042            0.162  </span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt;  6 dataandme       3230388598          0.227  </span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt;  7 hrbrmstr        5685812             0.320  </span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt;  8 netflix_bot     1203840834          0.978  </span></a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.997  </span></a>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; 10 mothgenerator   3277928935          0.998  </span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt; 11 American__Voter 829792389925597184  1.000</span></a></code></pre></div>
 </div>
 <div id="fast-true" class="section level3">
 <h3 class="hasAnchor">
@@ -174,25 +180,25 @@
 </h3>
 <p>The default [gradient boosted] model uses both users-level (bio, location, number of followers and friends, etc.) <strong>and</strong> tweets-level (number of hashtags, mentions, capital letters, etc. in a user’s most recent 100 tweets) data to estimate the probability that users are bots. For larger data sets, this method can be quite slow. Due to Twitter’s REST API rate limits, users are limited to only 180 estimates per every 15 minutes.</p>
 <p>To maximize the number of estimates per 15 minutes (at the cost of being less accurate), use the <code>fast = TRUE</code> argument. This method uses <strong>only</strong> users-level data, which increases the maximum number of estimates per 15 minutes to <em>90,000</em>! Due to losses in accuracy, this method should be used with caution!</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## get botornot estimates</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(users, <span class="dt">fast =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">## arrange by prob ests</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; # A tibble: 11 x 3</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt;    screen_name     user_id            prob_bot</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                 &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt;  1 mothgenerator   69133574            0.00185</span></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt;  2 American__Voter 2973406683          0.0415 </span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt;  3 ma_salmon       2865404679          0.0661 </span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt;  4 dataandme       3230388598          0.0965 </span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;  5 realDonaldTrump 13074042            0.121  </span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;  6 hrbrmstr        5685812             0.157  </span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt;  7 hadleywickham   25073877            0.368  </span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt;  8 kearneymw       1203840834          0.978  </span></a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.998  </span></a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; 10 netflix_bot     3277928935          0.999  </span></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; 11 juliasilge      829792389925597184  0.999</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## get botornot estimates</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(users, <span class="dt">fast =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">## arrange by prob ests</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; # A tibble: 11 x 3</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt;    screen_name     user_id            prob_bot</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                 &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt;  1 hadleywickham   69133574            0.00185</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt;  2 kearneymw       2973406683          0.0415 </span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt;  3 ma_salmon       2865404679          0.0661 </span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt;  4 dataandme       3230388598          0.0965 </span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt;  5 juliasilge      13074042            0.112  </span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt;  6 hrbrmstr        5685812             0.121  </span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt;  7 realDonaldTrump 25073877            0.368  </span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt;  8 netflix_bot     1203840834          0.978  </span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.998  </span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; 10 mothgenerator   3277928935          0.999  </span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 11 American__Voter 829792389925597184  0.999</span></a></code></pre></div>
 </div>
 </div>
 </div>

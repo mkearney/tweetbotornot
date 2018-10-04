@@ -24,19 +24,30 @@ Overall, the **fast model** is correct 91.9% of the time.
 
 ## Install
 
-Install from Github.
+Install from CRAN:
 
 ```{r, eval=FALSE}
-if (!requireNamespace("devtools", quietly = TRUE)) {
-  install.packages("devtools")
+## install from CRAN
+install.packages("tweetbotornot")
+```
+
+
+Install the development version from Github:
+
+```{r, eval=FALSE}
+## install remotes if not already
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
 }
+
+## install tweetbotornot from github
 devtools::install_github("mkearney/tweetbotornot")
 ```
 
 ## API authorization
 
 Users must be authorized in order to interact with Twitter's API. To setup your 
-machine for authorized request, [see these instructions provided in the rtweet package](http://rtweet.info/articles/auth.html).
+machine to make authorized requests, you'll either need to be signed into Twitter and working in an interactive session of R–the browser will open asking you to authorize the rtweet client (rstats2twitter)–or you'll need to create an app (and have a developer account) and your own API token. The latter has the benefit of (a) having sufficient permissions for write-acess and DM (direct messages) read-access levels and (b) more stability if Twitter decides to shut down [@kearneymw](https://twitter.com/kearneymw)'s access to Twitter (I try to be very responsible these days, but Twitter isn't always friendly to academic use cases). To create an app and your own Twitter token, [see these instructions provided in the rtweet package](http://rtweet.info/articles/auth.html).
 
 ## Usage
 
