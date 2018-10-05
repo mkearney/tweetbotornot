@@ -1,44 +1,66 @@
 context("tweetbotornot")
 
 test_that("default (with tweets) works", {
-  skip_on_cran()
-  token <- readRDS("twitter_tokens")
-  saveRDS(token, "twitter_api_token.rds")
-  Sys.setenv(TWITTER_PAT = "twitter_api_token.rds")
-  on.exit(unlink("twitter_api_token.rds"))
+
   ## select users
   users <- c("realdonaldtrump", "netflix_bot",
     "kearneymw", "dataandme", "hadleywickham",
     "ma_salmon", "juliasilge", "tidyversetweets",
     "American__Voter", "mothgenerator", "hrbrmstr")
 
-  ## get botornot estimates
-  data <- tweetbotornot(users)
-  expect_true(is.data.frame(data))
-  expect_equal(nrow(data), 11)
-  data <- botornot(users)
-  expect_equal(nrow(data), 11)
-  expect_true(is.data.frame(data))
+  ## if local, get new data
+  pat <- Sys.getenv("TWITTER_PAT")
+  if (!identical(pat, "") && file.exists(pat)) {
+    ## get botornot estimates
+    p <- tweetbotornot(users)
+  } else {
+    data <- readRDS("test-data.rds")
+    p <- tweetbotornot(data)
+  }
+  expect_true(is.data.frame(p))
+  expect_equal(nrow(p), 11)
+
+  ## this time with botornot
+  if (!identical(pat, "") && file.exists(pat)) {
+    ## get botornot estimates
+    p <- botornot(users)
+  } else {
+    data <- readRDS("test-data.rds")
+    p <- botornot(data)
+  }
+  expect_equal(nrow(p), 11)
+  expect_true(is.data.frame(p))
 })
 
 
 test_that("fast (w/o tweets) works", {
-  skip_on_cran()
-  token <- readRDS("twitter_tokens")
-  saveRDS(token, "twitter_api_token.rds")
-  Sys.setenv(TWITTER_PAT = "twitter_api_token.rds")
-  on.exit(unlink("twitter_api_token.rds"))
+
   ## select users
   users <- c("realdonaldtrump", "netflix_bot",
     "kearneymw", "dataandme", "hadleywickham",
     "ma_salmon", "juliasilge", "tidyversetweets",
     "American__Voter", "mothgenerator", "hrbrmstr")
 
-  ## get botornot estimates
-  data <- tweetbotornot(users, fast = TRUE)
-  expect_equal(nrow(data), 11)
-  expect_true(is.data.frame(data))
-  data <- botornot(users, fast = TRUE)
-  expect_equal(nrow(data), 11)
-  expect_true(is.data.frame(data))
+  ## if local, get new data
+  pat <- Sys.getenv("TWITTER_PAT")
+  if (!identical(pat, "") && file.exists(pat)) {
+    ## get botornot estimates
+    p <- tweetbotornot(users, fast = TRUE)
+  } else {
+    data <- readRDS("test-data.rds")
+    p <- tweetbotornot(data, fast = TRUE)
+  }
+  expect_true(is.data.frame(p))
+  expect_equal(nrow(p), 11)
+
+  ## this time with botornot
+  if (!identical(pat, "") && file.exists(pat)) {
+    ## get botornot estimates
+    p <- botornot(users, fast = TRUE)
+  } else {
+    data <- readRDS("test-data.rds")
+    p <- botornot(data, fast = TRUE)
+  }
+  expect_equal(nrow(p), 11)
+  expect_true(is.data.frame(p))
 })
