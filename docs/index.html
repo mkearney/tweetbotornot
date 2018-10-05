@@ -111,7 +111,7 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>There’s one function <code><a href="reference/botornot.html">tweetbotornot()</a></code> (technically there’s also <code><a href="reference/botornot.html">botornot()</a></code>, but it does the same exact thing). Give it a vector of screen names or user IDs and let it go to work.</p>
+<p>There’s one function <code><a href="reference/tweetbotornot.html">tweetbotornot()</a></code> (technically there’s also <code><a href="reference/tweetbotornot.html">botornot()</a></code>, but it does the same exact thing). Give it a vector of screen names or user IDs and let it go to work.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## load package</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">library</span>(tweetbotornot)</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"></a>
@@ -122,7 +122,7 @@
 <a class="sourceLine" id="cb3-8" data-line-number="8">  <span class="st">"American__Voter"</span>, <span class="st">"mothgenerator"</span>, <span class="st">"hrbrmstr"</span>)</a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"></a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">## get botornot estimates</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">tweetbotornot</a></span>(users)</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/tweetbotornot.html">tweetbotornot</a></span>(users)</a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"></a>
 <a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">## arrange by prob ests</span></a>
 <a class="sourceLine" id="cb3-14" data-line-number="14">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
@@ -143,12 +143,12 @@
 <div id="integration-with-rtweet" class="section level3">
 <h3 class="hasAnchor">
 <a href="#integration-with-rtweet" class="anchor"></a>Integration with rtweet</h3>
-<p>The <code><a href="reference/botornot.html">botornot()</a></code> function also accepts data returned by <a href="http://rtweet.info">rtweet</a> functions.</p>
+<p>The <code><a href="reference/tweetbotornot.html">botornot()</a></code> function also accepts data returned by <a href="http://rtweet.info">rtweet</a> functions.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## get most recent 100 tweets from each user</span></a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">tmls &lt;-<span class="st"> </span><span class="kw">get_timelines</span>(users, <span class="dt">n =</span> <span class="dv">100</span>)</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">## pass the returned data to botornot()</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(tmls)</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/tweetbotornot.html">botornot</a></span>(tmls)</a>
 <a class="sourceLine" id="cb4-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">## arrange by prob ests</span></a>
 <a class="sourceLine" id="cb4-8" data-line-number="8">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
@@ -174,7 +174,7 @@
 <p>The default [gradient boosted] model uses both users-level (bio, location, number of followers and friends, etc.) <strong>and</strong> tweets-level (number of hashtags, mentions, capital letters, etc. in a user’s most recent 100 tweets) data to estimate the probability that users are bots. For larger data sets, this method can be quite slow. Due to Twitter’s REST API rate limits, users are limited to only 180 estimates per every 15 minutes.</p>
 <p>To maximize the number of estimates per 15 minutes (at the cost of being less accurate), use the <code>fast = TRUE</code> argument. This method uses <strong>only</strong> users-level data, which increases the maximum number of estimates per 15 minutes to <em>90,000</em>! Due to losses in accuracy, this method should be used with caution!</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## get botornot estimates</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(users, <span class="dt">fast =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/tweetbotornot.html">botornot</a></span>(users, <span class="dt">fast =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">## arrange by prob ests</span></a>
 <a class="sourceLine" id="cb5-5" data-line-number="5">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>

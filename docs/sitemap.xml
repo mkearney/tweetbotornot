@@ -4,12 +4,12 @@
     <loc>https://tweetbotornot.mikewk.com/index.html</loc>
   </url>
   <url>
-    <loc>https://tweetbotornot.mikewk.com/reference/botornot.html</loc>
-  </url>
-  <url>
     <loc>https://tweetbotornot.mikewk.com/reference/classify_data.html</loc>
   </url>
   <url>
     <loc>https://tweetbotornot.mikewk.com/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://tweetbotornot.mikewk.com/reference/tweetbotornot.html</loc>
   </url>
 </urlset>

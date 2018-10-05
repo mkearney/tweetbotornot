@@ -1,4 +1,11 @@
-#' botornot
+#' Identical to \code{tweetbotornot}
+#' @rdname tweetbotornot
+#' @inheritParams tweetbotornot
+#' @export
+botornot <- function(x, fast = FALSE) UseMethod("botornot")
+
+
+#' tweetbotornot
 #'
 #' Classify users/accounts in Twitter data as bots or not bots.
 #'
@@ -11,12 +18,22 @@
 #'   Twitter's APIS but overall less accurate.
 #' @return Classifications for all users expressed as probability of whether
 #'   each account is a bot.
-#' @export
-botornot <- function(x, fast = FALSE) UseMethod("botornot")
-
-#' Identical to \code{botornot}
-#' @rdname botornot
-#' @inheritParams botornot
+#' @examples
+#' \dontrun{
+#'
+#' ## vector of screen names
+#' sns <- c("kearneymw", "geoffjentry", "p_barbera",
+#'   "tidyversetweets", "rstatsbot1234", "RStatsStExBot")
+#'
+#' ## get and view bot probability estimates
+#' twb <- tweetbotornot(sns)
+#' twb
+#'
+#' ## ask for the fast (user-level data only) version
+#' twbf <- tweetbotornot(sns, fast = TRUE)
+#' twbf
+#'
+#' }
 #' @export
 tweetbotornot <- function(x, fast = FALSE) UseMethod("tweetbotornot")
 

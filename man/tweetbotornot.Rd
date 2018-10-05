@@ -3,7 +3,7 @@
 \name{botornot}
 \alias{botornot}
 \alias{tweetbotornot}
-\title{botornot}
+\title{Identical to \code{tweetbotornot}}
 \usage{
 botornot(x, fast = FALSE)
 
@@ -25,4 +25,21 @@ each account is a bot.
 }
 \description{
 Classify users/accounts in Twitter data as bots or not bots.
+}
+\examples{
+\dontrun{
+
+## vector of screen names
+sns <- c("kearneymw", "geoffjentry", "p_barbera",
+  "tidyversetweets", "rstatsbot1234", "RStatsStExBot")
+
+## get and view bot probability estimates
+twb <- tweetbotornot(sns)
+twb
+
+## ask for the fast (user-level data only) version
+twbf <- tweetbotornot(sns, fast = TRUE)
+twbf
+
+}
 }
