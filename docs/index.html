@@ -11,8 +11,8 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Classify Twitter Users as Bot or Not">
-<meta property="og:description" content="Classify Twitter accounts as bot or not bot. The packagae uses 
-    a gradient boosted model, which was trained using thousands of real 
+<meta property="og:description" content="Classify Twitter accounts as bot or not bot. The package uses 
+    a generalized boosted model, which was trained using thousands of real 
     automated (bot) and non-automated Twitter accounts, and returns estimated
     probabilities of whether supplied accounts are bots.">
 <meta property="og:image" content="https://tweetbotornot.mikewk.com/logo.png">
@@ -77,14 +77,10 @@
     
 <div id="tweetbotornot" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#tweetbotornot" class="anchor"></a>tweetbotornot <img width="150px" src="reference/figures/logo.png" align="right">
+<a href="#tweetbotornot" class="anchor"></a>tweetbotornot <img width="160px" src="reference/figures/logo.png" align="right">
 </h1></div>
+
 <p>An R package for classifying Twitter accounts as <code>bot or not</code>.</p>
-<div id="note" class="section level2">
-<h2 class="hasAnchor">
-<a href="#note" class="anchor"></a>NOTE</h2>
-<p>In order to avoid confusion, the package was renamed from “botrnot” to “tweetbotornot” in June 2018. This package should not be confused with the <a href="http://botornot.co/">botornot application</a>.</p>
-</div>
 <div id="features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#features" class="anchor"></a>Features</h2>
@@ -115,7 +111,7 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>There’s one function <code><a href="reference/botornot.html">botornot()</a></code>. Give it a vector of screen names or user IDs and let it go to work.</p>
+<p>There’s one function <code><a href="reference/botornot.html">tweetbotornot()</a></code> (technically there’s also <code><a href="reference/botornot.html">botornot()</a></code>, but it does the same exact thing). Give it a vector of screen names or user IDs and let it go to work.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## load package</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">library</span>(tweetbotornot)</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"></a>
@@ -126,7 +122,7 @@
 <a class="sourceLine" id="cb3-8" data-line-number="8">  <span class="st">"American__Voter"</span>, <span class="st">"mothgenerator"</span>, <span class="st">"hrbrmstr"</span>)</a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"></a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">## get botornot estimates</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(users)</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">tweetbotornot</a></span>(users)</a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"></a>
 <a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">## arrange by prob ests</span></a>
 <a class="sourceLine" id="cb3-14" data-line-number="14">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
@@ -143,36 +139,33 @@
 <a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt;  8 netflix_bot     1203840834          0.978  </span></a>
 <a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.997  </span></a>
 <a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">#&gt; 10 mothgenerator   3277928935          0.998  </span></a>
-<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt; 11 American__Voter 829792389925597184  1.000</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt; 11 American__Voter 829792389925597184  1.000  </span></a></code></pre></div>
 <div id="integration-with-rtweet" class="section level3">
 <h3 class="hasAnchor">
 <a href="#integration-with-rtweet" class="anchor"></a>Integration with rtweet</h3>
 <p>The <code><a href="reference/botornot.html">botornot()</a></code> function also accepts data returned by <a href="http://rtweet.info">rtweet</a> functions.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## load rtweet</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">library</span>(rtweet)</a>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## get most recent 100 tweets from each user</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">tmls &lt;-<span class="st"> </span><span class="kw">get_timelines</span>(users, <span class="dt">n =</span> <span class="dv">100</span>)</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">## get most recent 100 tweets from each user</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">tmls &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/rtweet/topics/get_timeline">get_timelines</a></span>(users, <span class="dt">n =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">## pass the returned data to botornot()</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(tmls)</a>
 <a class="sourceLine" id="cb4-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">## pass the returned data to botornot()</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">data &lt;-<span class="st"> </span><span class="kw"><a href="reference/botornot.html">botornot</a></span>(tmls)</a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">## arrange by prob ests</span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; # A tibble: 11 x 3</span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;    screen_name     user_id            prob_bot</span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                 &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt;  1 hadleywickham   69133574            0.00754</span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt;  2 realDonaldTrump 25073877            0.00995</span></a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt;  3 kearneymw       2973406683          0.0607 </span></a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt;  4 ma_salmon       2865404679          0.150  </span></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt;  5 juliasilge      13074042            0.162  </span></a>
-<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt;  6 dataandme       3230388598          0.227  </span></a>
-<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt;  7 hrbrmstr        5685812             0.320  </span></a>
-<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt;  8 netflix_bot     1203840834          0.978  </span></a>
-<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.997  </span></a>
-<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; 10 mothgenerator   3277928935          0.998  </span></a>
-<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt; 11 American__Voter 829792389925597184  1.000</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">## arrange by prob ests</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">data[<span class="kw">order</span>(data<span class="op">$</span>prob_bot), ]</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; # A tibble: 11 x 3</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt;    screen_name     user_id            prob_bot</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                 &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt;  1 hadleywickham   69133574            0.00754</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;  2 realDonaldTrump 25073877            0.00995</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;  3 kearneymw       2973406683          0.0607 </span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt;  4 ma_salmon       2865404679          0.150  </span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt;  5 juliasilge      13074042            0.162  </span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt;  6 dataandme       3230388598          0.227  </span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt;  7 hrbrmstr        5685812             0.320  </span></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt;  8 netflix_bot     1203840834          0.978  </span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.997  </span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; 10 mothgenerator   3277928935          0.998  </span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; 11 American__Voter 829792389925597184  1.000  </span></a></code></pre></div>
 </div>
 <div id="fast-true" class="section level3">
 <h3 class="hasAnchor">
@@ -198,8 +191,13 @@
 <a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt;  8 netflix_bot     1203840834          0.978  </span></a>
 <a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt;  9 tidyversetweets 935569091678691328  0.998  </span></a>
 <a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; 10 mothgenerator   3277928935          0.999  </span></a>
-<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 11 American__Voter 829792389925597184  0.999</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 11 American__Voter 829792389925597184  0.999  </span></a></code></pre></div>
 </div>
+</div>
+<div id="note" class="section level2">
+<h2 class="hasAnchor">
+<a href="#note" class="anchor"></a>NOTE</h2>
+<p>In order to avoid confusion, the package was renamed from “botrnot” to “tweetbotornot” in June 2018. This package should not be confused with the <a href="http://botornot.co/">botornot application</a>.</p>
 </div>
 </div>
   </div>
@@ -227,7 +225,15 @@
 </ul>
 </div>
 
-      </div>
+      <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="lifecycle"></a></li>
+<li><a href="https://travis-ci.org/mkearney/tweetbotornot"><img src="https://travis-ci.org/mkearney/tweetbotornot.svg?branch=master" alt="Travis build status"></a></li>
+<li><a href="https://codecov.io/github/mkearney/tweetbotornot?branch=master"><img src="https://codecov.io/gh/mkearney/tweetbotornot/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
+</ul>
+</div>
+</div>
 
 </div>
 
