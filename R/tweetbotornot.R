@@ -1,8 +1,3 @@
-#' Identical to \code{tweetbotornot}
-#' @rdname tweetbotornot
-#' @inheritParams tweetbotornot
-#' @export
-botornot <- function(x, fast = FALSE) UseMethod("botornot")
 
 
 #' tweetbotornot
@@ -37,10 +32,18 @@ botornot <- function(x, fast = FALSE) UseMethod("botornot")
 #' @export
 tweetbotornot <- function(x, fast = FALSE) UseMethod("tweetbotornot")
 
+
 #' @export
 tweetbotornot.default <- function(x, fast = FALSE) {
   botornot(x, fast = fast)
 }
+
+
+#' Identical to \code{tweetbotornot}
+#' @rdname tweetbotornot
+#' @inheritParams tweetbotornot
+#' @export
+botornot <- function(x, fast = FALSE) UseMethod("botornot")
 
 #' @export
 botornot.data.frame <- function(x, fast = FALSE) {
@@ -90,4 +93,30 @@ botornot.character <- function(x, fast = FALSE) {
   x <- rtweet::get_timelines(x, n = 100)
   ## pass to next method
   botornot(x, fast = fast)
+}
+
+
+#' Esimated probability of being a bot
+#'
+#' Returns a numeric vector of probabilities
+#'
+#' @inheritParams tweetbotornot
+#' @rdname tweetbotornot
+#' @return A named (screen names or user IDs depending on input) numeric
+#'   vector of probabilities
+#' @export
+botornot_dbl <- function(x, fast = TRUE) {
+  if (is.data.frame(x)) {
+    usrs <- x$screen_name
+  } else {
+    usrs <- x
+  }
+  p <- botornot(x, fast = TRUE)
+  if (any(usrs %in% p$screen_name)) {
+    p <- p$prob_bot[match(usrs, p$screen_name)]
+  } else {
+    p <- p$prob_bot[match(usrs, p$user_id)]
+  }
+  names(p) <- usrs
+  p
 }

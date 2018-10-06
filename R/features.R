@@ -129,14 +129,6 @@ percent_correct <- function(data, m, n_trees = 500) {
 }
 
 
-#' classify data
-#'
-#' Generate predicted probabilities of observations being bots.
-#'
-#' @param x New data on which to apply botornot model.
-#' @param model gbm model from which to predict.
-#' @return Vector of predictions expressed as probabilities of accounts being
-#'   bots.
 classify_data <- function(x, model) {
   ##best.iter <- gbm::gbm.perf(model, method = "cv", plot.it = FALSE)
   gbm::predict.gbm(model, n.trees = 700, newdata = x,
