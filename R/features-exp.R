@@ -83,10 +83,6 @@ extract_features_exp <- function(x) {
       years_on_twitter = relative_twitter_age(.data$account_created_at[1]),
       tweets_per_year = .data$n_tweets / (1 + .data$years_on_twitter),
 
-      verified = as.integer(.data$verified[1]),
-      years_on_twitter = as.numeric(
-        difftime(Sys.time(), .data$account_created_at[1], units = "days")) / 365,
-      tweets_per_year = .data$n_tweets / (1 + .data$years_on_twitter),
       ## i added one here so it wouldn't return NaN or undefined values (0 / x)
       statuses_count = max_(c(0, .data$statuses_count)),
       followers_count = max_(c(0, .data$followers_count)),
@@ -105,7 +101,9 @@ extract_features_exp <- function(x) {
 }
 
 
-age_of_twitter <- function() as.numeric(difftime(Sys.time(), as.POSIXct("2006-03-21"), units = "days"))/365
+age_of_twitter <- function() {
+  as.numeric(difftime(Sys.time(), as.POSIXct("2006-03-21"), units = "days"))/365
+}
 
 relative_twitter_age <- function(account_created_at) {
   years <- as.numeric(difftime(Sys.time(), account_created_at, units = "days"))/365
