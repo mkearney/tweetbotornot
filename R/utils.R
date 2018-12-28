@@ -67,3 +67,14 @@ count_mean <- function(x) {
   x <- as.integer(x) - 1L
   mean(x, na.rm = TRUE)
 }
+
+
+nchar_ <- function(x) {
+  ifelse(is.na(x), 0, nchar(x))
+}
+
+
+ndigit_ <- function(x) {
+  ifelse(is.na(x), 0, nchar(gsub("\\D", "", x)))
+}
+
