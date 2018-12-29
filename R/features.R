@@ -6,6 +6,16 @@ utils::globalVariables(c("account_created_at", "created_at", "favorite_count",
 
 sum_ <- function(x) sum(x, na.rm = TRUE)
 
+sd_ <- function(x) {
+  if (length(x) == 1 || all(is.na(x))) return(0)
+  sd(x, na.rm = TRUE)
+}
+
+range_ <- function(x) {
+  if (length(x) == 1 || all(is.na(x))) return(0)
+  abs(max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+}
+
 max_ <- function(x) max(x, na.rm = TRUE)
 
 mean_ <- function(x) mean(x, na.rm = TRUE)

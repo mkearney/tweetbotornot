@@ -1,4 +1,16 @@
 extract_features_exp <- function(x) {
+  nrc_langs <- which_language(x$lang)
+  text <- tokenizers::tokenize_tweets(x$text)
+  x$sent_nrc_positive <- sentiment_nrc_positive(text, nrc_langs)
+  x$sent_nrc_negative <- sentiment_nrc_negative(text, nrc_langs)
+  x$sent_nrc_anger <- sentiment_nrc_anger(text, nrc_langs)
+  x$sent_nrc_anticipation <- sentiment_nrc_anticipation(text, nrc_langs)
+  x$sent_nrc_disgust <- sentiment_nrc_disgust(text, nrc_langs)
+  x$sent_nrc_fear <- sentiment_nrc_fear(text, nrc_langs)
+  x$sent_nrc_sadness <- sentiment_nrc_sadness(text, nrc_langs)
+  x$sent_nrc_surprise <- sentiment_nrc_surprise(text, nrc_langs)
+  x$sent_nrc_trust <- sentiment_nrc_trust(text, nrc_langs)
+
   ## remove retweet text and counts
   x$text[x$is_retweet] <- NA_character_
   x$retweet_count[x$is_retweet] <- NA_integer_
@@ -9,6 +21,7 @@ extract_features_exp <- function(x) {
       ## tweets features
       n_sincelast = count_mean(since_last(.data$created_at)),
       n_timeofday = count_mean(hourofweekday(.data$created_at)),
+      n_timeofday = range_(hourofweekday(.data$created_at)),
       n = dplyr::n(),
       n_retweets = sum_(.data$is_retweet),
       n_quotes = sum_(.data$is_quote),
@@ -19,6 +32,34 @@ extract_features_exp <- function(x) {
       n_places = sum_(!is.na(.data$place_name)),
       n_geo_coords = ncoord(.data$geo_coords),
       n_bbox_coords = ncoord(.data$bbox_coords),
+
+      sent_nrc_positive_sd = sd_(c(.data$sent_nrc_positive)),
+      sent_nrc_negative_sd = sd_(c(.data$sent_nrc_negative)),
+      sent_nrc_anger_sd = sd_(c(.data$sent_nrc_anger)),
+      sent_nrc_anticipation_sd = sd_(c(.data$sent_nrc_anticipation)),
+      sent_nrc_disgust_sd = sd_(c(.data$sent_nrc_disgust)),
+      sent_nrc_fear_sd = sd_(c(.data$sent_nrc_fear)),
+      sent_nrc_sadness_sd = sd_(c(.data$sent_nrc_sadness)),
+      sent_nrc_trust_sd = sd_(c(.data$sent_nrc_trust)),
+
+      sent_nrc_positive_range = range_(c(.data$sent_nrc_positive)),
+      sent_nrc_negative_range = range_(c(.data$sent_nrc_negative)),
+      sent_nrc_anger_range = range_(c(.data$sent_nrc_anger)),
+      sent_nrc_anticipation_range = range_(c(.data$sent_nrc_anticipation)),
+      sent_nrc_disgust_range = range_(c(.data$sent_nrc_disgust)),
+      sent_nrc_fear_range = range_(c(.data$sent_nrc_fear)),
+      sent_nrc_sadness_range = range_(c(.data$sent_nrc_sadness)),
+      sent_nrc_trust_range = range_(c(.data$sent_nrc_trust)),
+
+      sent_nrc_positive = mean_(c(0, .data$sent_nrc_positive)),
+      sent_nrc_negative = mean_(c(0, .data$sent_nrc_negative)),
+      sent_nrc_anger = mean_(c(0, .data$sent_nrc_anger)),
+      sent_nrc_anticipation = mean_(c(0, .data$sent_nrc_anticipation)),
+      sent_nrc_disgust = mean_(c(0, .data$sent_nrc_disgust)),
+      sent_nrc_fear = mean_(c(0, .data$sent_nrc_fear)),
+      sent_nrc_sadness = mean_(c(0, .data$sent_nrc_sadness)),
+      sent_nrc_trust = mean_(c(0, .data$sent_nrc_trust)),
+
       iphone = sum_("Twitter for iPhone" %in% .data$source) / .data$n,
       webclient = sum_("Twitter Web Client" %in% .data$source) / .data$n,
       android = sum_("Twitter for Android" %in% .data$source) / .data$n,
@@ -105,13 +146,17 @@ extract_features_exp <- function(x) {
       lang_engb = as.integer(.data$account_lang[1] == "en-gb"),
       screen_name_alpha = nchar_(.data$screen_name[1]),
       screen_name_num = ndigit_(.data$screen_name[1]),
-      prof_image_na = sum_(is.na(.data$profile_image_url[1])),
-      prof_image_type = sum_(grepl("\\.jpg", .data$profile_image_url[1])),
-      profile_bg_na = sum_(is.na(.data$profile_background_url[1])),
-      profile_bg_type = sum_(grepl("\\.png", .data$profile_background_url[1])),
-      profile_bn_na = sum_(is.na(.data$profile_banner_url[1])),
+
+      prof_image_na = as.integer(grepl("default_profile_images", .data$profile_image_url[1])),
+      prof_image_type = as.integer(grepl("\\.jpg", .data$profile_image_url[1])),
+
+      profile_bg_na = as.integer(is.na(.data$profile_background_url[1])),
+      profile_bg_type = as.integer(grepl("\\.png", .data$profile_background_url[1])),
+
+      profile_bn_na = as.integer(is.na(.data$profile_banner_url[1])),
+
       verified = as.integer(.data$verified[1]),
-      profile_url = !is.na(.data$profile_url[1]),
+      profile_url = as.integer(!is.na(.data$profile_url[1])),
       years_on_twitter = relative_twitter_age(.data$account_created_at[1]),
       tweets_per_year = .data$n_tweets / (1 + .data$years_on_twitter),
       statuses_count = max_(c(0, .data$statuses_count)),
@@ -149,3 +194,117 @@ ncoord <- function(x) {
 }
 
 
+code_langs <- c(
+  english = "en",
+  arabic = "ar",
+  basque = "eu",
+  bengali = "bn",
+  catalan = "ca",
+  chinese_simplified = "zh",
+  chinese_traditional = "zh",
+  danish = "da",
+  dutch = "nl",
+  esperanto = "eo",
+  finnish = "fi",
+  french = "fr",
+  german = "de",
+  greek = "el",
+  gujarati = "gu",
+  hebrew = "he",
+  hindi = "hi",
+  irish = "en-gb",
+  italian = "it",
+  japanese = "ja",
+  latin = "la",
+  marathi = "mr",
+  persian = "fa",
+  portuguese = "pt",
+  romanian = "ro",
+  russian = "ru",
+  somali = "so",
+  spanish = "es",
+  sudanese = "su",
+  swahili = "sw",
+  swedish = "sv",
+  tamil = "ta",
+  telugu = "te",
+  thai = "th",
+  turkish = "tr",
+  ukranian = "uk",
+  urdu = "ur",
+  vietnamese = "vi",
+  welsh = "cy",
+  yiddish = "yi",
+  zulu = "zu"
+)
+
+
+which_language <- function(lang) {
+  ifelse(lang %in% code_langs,
+    names(code_langs)[match(lang, code_langs)],
+    "english")
+}
+
+
+
+sentiment_est_binary <- function(x, lang, dict) {
+  if (is.character(x)) {
+    x <- gsub("https?://\\S+|@\\S+", "", x)
+    x <- tokenizers::tokenize_words(
+      x, lowercase = TRUE, strip_punct = TRUE, strip_numeric = FALSE
+    )
+  }
+  unlist(
+    Map(function(.x, .y)
+      sum(.x %in% dict$word[dict$language == .y]),
+      x, lang, USE.NAMES = FALSE)
+  )
+}
+
+
+
+sentiment_nrc_positive <- function(x, lang) {
+  sentiment_est_binary(x, lang,
+    nrc_dict[nrc_dict$sentiment == "positive", ]
+  )
+}
+sentiment_nrc_negative <- function(x, lang) {
+  sentiment_est_binary(x, lang,
+    nrc_dict[nrc_dict$sentiment == "negative", ]
+  )
+}
+sentiment_nrc_anger <- function(x, lang) {
+  sentiment_est_binary(x, lang,
+    nrc_dict[nrc_dict$sentiment == "anger", ]
+  )
+}
+sentiment_nrc_anticipation <- function(x, lang) {
+  sentiment_est_binary(x, lang,
+    nrc_dict[nrc_dict$sentiment == "anticipation", ]
+  )
+}
+sentiment_nrc_disgust <- function(x, lang) {
+  sentiment_est_binary(x, lang,
+    nrc_dict[nrc_dict$sentiment == "disgust", ]
+  )
+}
+sentiment_nrc_fear <- function(x, lang) {
+  sentiment_est_binary(x, lang,
+    nrc_dict[nrc_dict$sentiment == "fear", ]
+  )
+}
+sentiment_nrc_sadness <- function(x, lang) {
+  sentiment_est_binary(x, lang,
+    nrc_dict[nrc_dict$sentiment == "sadness", ]
+  )
+}
+sentiment_nrc_surprise <- function(x, lang) {
+  sentiment_est_binary(x, lang,
+    nrc_dict[nrc_dict$sentiment == "surprise", ]
+  )
+}
+sentiment_nrc_trust <- function(x, lang) {
+  sentiment_est_binary(x, lang,
+    nrc_dict[nrc_dict$sentiment == "trust", ]
+  )
+}
