@@ -34,8 +34,8 @@ tweetbotornot <- function(x, fast = FALSE) UseMethod("tweetbotornot")
 
 
 #' @export
-tweetbotornot.default <- function(x, fast = FALSE) {
-  botornot(x, fast = fast)
+tweetbotornot.default <- function(x, fast = TRUE) {
+  botornot_dbl(x, fast = fast)
 }
 
 
