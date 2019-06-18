@@ -1,5 +1,3 @@
-
-
 #' tweetbotornot
 #'
 #' Classify users/accounts in Twitter data as bots or not bots.
@@ -34,8 +32,8 @@ tweetbotornot <- function(x, fast = FALSE) UseMethod("tweetbotornot")
 
 
 #' @export
-tweetbotornot.default <- function(x, fast = TRUE) {
-  botornot_dbl(x, fast = fast)
+tweetbotornot.default <- function(x, fast = FALSE) {
+  botornot(x, fast = fast)
 }
 
 
@@ -47,7 +45,7 @@ botornot <- function(x, fast = FALSE) UseMethod("botornot")
 
 #' @export
 botornot.data.frame <- function(x, fast = FALSE) {
-  stopifnot(nrow(x) > 0, "user_id" %in% names(x))
+  ## stopifnot(nrow(x) > 0, "user_id" %in% names(x))
   ## store screen and user names
   uu <- x[!duplicated(x$user_id), ]
   if (fast) {
