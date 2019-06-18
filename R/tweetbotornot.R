@@ -45,7 +45,7 @@ botornot <- function(x, fast = FALSE) UseMethod("botornot")
 
 #' @export
 botornot.data.frame <- function(x, fast = FALSE) {
-  ## stopifnot(nrow(x) > 0, "user_id" %in% names(x))
+  stopifnot(nrow(x) > 0, "user_id" %in% names(x))
   ## store screen and user names
   uu <- x[!duplicated(x$user_id), ]
   if (fast) {
@@ -88,7 +88,7 @@ botornot.character <- function(x, fast = FALSE) {
   ## remove NA and duplicates
   x <- x[!is.na(x) & !duplicated(x)]
   ## get most recent 100 tweets
-  x <- rtweet::get_timelines(x, n = 100)
+  x <- rtweet::get_timelines(x, n = 100, home = FALSE)
   ## pass to next method
   botornot(x, fast = fast)
 }
