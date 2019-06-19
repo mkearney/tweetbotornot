@@ -46,7 +46,9 @@ botornot <- function(x, fast = FALSE) UseMethod("botornot")
 
 #' @export
 botornot.data.frame <- function(x, fast = FALSE) {
-  stopifnot(nrow(x) > 0, "user_id" %in% names(x))
+  print("df")
+  print(x)
+  #stopifnot(nrow(x) > 0, "user_id" %in% names(x))
   ## store screen and user names
   uu <- x[!duplicated(x$user_id), ]
   if (fast) {
@@ -90,6 +92,8 @@ botornot.character <- function(x, fast = FALSE) {
   x <- x[!is.na(x) & !duplicated(x)]
   ## get most recent 100 tweets
   x <- rtweet::users_data(x)
+  print("char")
+  print(x)
   ## pass to next method
   botornot(x, fast = fast)
 }
@@ -105,6 +109,7 @@ botornot.character <- function(x, fast = FALSE) {
 #'   vector of probabilities
 #' @export
 botornot_dbl <- function(x, fast = TRUE) {
+  print("dbl")
   if (is.data.frame(x)) {
     usrs <- x$screen_name
   } else {
