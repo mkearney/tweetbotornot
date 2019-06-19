@@ -100,10 +100,6 @@ botornot.character <- function(x, fast = FALSE) {
     ## get most recent 100 tweets
     x <- rtweet::get_timelines(x, n = 100)
     }
-  
-  
-  
-  
   ## pass to next method
   botornot(x, fast = fast)
 }
