@@ -28,11 +28,12 @@
 #'
 #' }
 #' @export
-tweetbotornot <- function(x, fast = FALSE) UseMethod("botornot_dbl")
+tweetbotornot <- function(x, fast = FALSE) UseMethod("tweetbotornot")
 
 
 #' @export
 tweetbotornot.default <- function(x, fast = FALSE) {
+  print ("default called")
   botornot(x, fast = fast)
 }
 
@@ -76,18 +77,6 @@ botornot.data.frame <- function(x, fast = FALSE) {
     user_id = uu$user_id,
     prob_bot = p)
 }
-
-#' @export
-botornot.factor <- function(x, fast = FALSE) {
-  x <- as.character(x)
-  botornot(x, fast = fast)
-}
-
-#' @export
-botornot.character <- function(x, fast = FALSE) {
-  botornot_dbl(x, fast = fast)
-}
-
 
 #' Esimated probability of being a bot
 #'
