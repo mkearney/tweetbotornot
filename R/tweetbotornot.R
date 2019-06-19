@@ -46,8 +46,6 @@ botornot <- function(x, fast = FALSE) UseMethod("botornot")
 
 #' @export
 botornot.data.frame <- function(x, fast = FALSE) {
-  print("df")
-  print(x)
   stopifnot(nrow(x) > 0, "user_id" %in% names(x))
   ## store screen and user names
   uu <- x[!duplicated(x$user_id), ]
@@ -115,7 +113,6 @@ botornot.character <- function(x, fast = FALSE) {
 #'   vector of probabilities
 #' @export
 botornot_dbl <- function(x, fast = TRUE) {
-  print("dbl")
   if (is.data.frame(x)) {
     usrs <- x$screen_name
   } else {
