@@ -91,7 +91,7 @@ botornot.character <- function(x, fast = FALSE) {
   ## remove NA and duplicates
   x <- x[!is.na(x) & !duplicated(x)]
   ## get most recent 100 tweets
-  x <- rtweet::get_timelines(x, n = 100)
+  x <- rtweet::get_timeline(x, n = 100)
   print("char")
   print(x)
   ## pass to next method
