@@ -85,7 +85,7 @@ botornot.factor <- function(x, fast = FALSE) {
 
 #' @export
 botornot.character <- function(x, fast = FALSE) {
-  botornot(x, fast = fast)
+  botornot_dbl(x, fast = fast)
 }
 
 
