@@ -89,7 +89,7 @@ botornot.character <- function(x, fast = FALSE) {
   ## remove NA and duplicates
   x <- x[!is.na(x) & !duplicated(x)]
   ## get most recent 100 tweets
-  x <- rtweet::user_object(x)
+  x <- rtweet::users_data(x)
   ## pass to next method
   botornot(x, fast = fast)
 }
