@@ -28,7 +28,7 @@
 #'
 #' }
 #' @export
-tweetbotornot <- function(x, fast = FALSE) UseMethod("tweetbotornot")
+tweetbotornot <- function(x, fast = FALSE) UseMethod("botornot_dbl")
 
 
 #' @export
