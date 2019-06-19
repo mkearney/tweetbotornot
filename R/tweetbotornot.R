@@ -1,3 +1,4 @@
+
 #' tweetbotornot
 #'
 #' Classify users/accounts in Twitter data as bots or not bots.
@@ -33,7 +34,6 @@ tweetbotornot <- function(x, fast = FALSE) UseMethod("tweetbotornot")
 
 #' @export
 tweetbotornot.default <- function(x, fast = FALSE) {
-  print ("default called")
   botornot(x, fast = fast)
 }
 
@@ -77,6 +77,23 @@ botornot.data.frame <- function(x, fast = FALSE) {
     user_id = uu$user_id,
     prob_bot = p)
 }
+
+#' @export
+botornot.factor <- function(x, fast = FALSE) {
+  x <- as.character(x)
+  botornot(x, fast = fast)
+}
+
+#' @export
+botornot.character <- function(x, fast = FALSE) {
+  ## remove NA and duplicates
+  x <- x[!is.na(x) & !duplicated(x)]
+  ## get most recent 100 tweets
+  x <- rtweet::get_timelines(x, n = 100)
+  ## pass to next method
+  botornot(x, fast = fast)
+}
+
 
 #' Esimated probability of being a bot
 #'
