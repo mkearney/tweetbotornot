@@ -34,28 +34,33 @@ extract_features_ytweets <- function(x) {
   ## tweet features
   txt_df <- tf(
     dplyr::select(x[!is.na(x$text), ], user_id = user_id, text = text))
+  txt_df <- cbind(user_id = x$user_id[!is.na(x$text)], txt_df, stringsAsFactors = FALSE)
   names(txt_df)[-1] <- paste0("txt_", names(txt_df)[-1])
 
   ## base64 version
   b64_df <- tf(
     dplyr::select(x[!is.na(x$text), ], user_id = user_id, text = text))
+  b64_df <- cbind(user_id = x$user_id[!is.na(x$text)], b64_df, stringsAsFactors = FALSE)
   names(b64_df)[-1] <- paste0("b64_", names(b64_df)[-1])
 
   dsc_df <- tf(
     dplyr::select(x_usr, user_id = user_id, text = description))
+  dsc_df <- cbind(user_id = x_usr$user_id, dsc_df, stringsAsFactors = FALSE)
   names(dsc_df)[-1] <- paste0("dsc_", names(dsc_df)[-1])
 
   loc_df <- tf(
     dplyr::select(x_usr, user_id = user_id, text = location))
+  loc_df <- cbind(user_id = x_usr$user_id, loc_df)
   names(loc_df)[-1] <- paste0("loc_", names(loc_df)[-1])
 
   nm_df <- tf(
     dplyr::select(x_usr, user_id = user_id, text = name))
+  nm_df <- cbind(user_id = x_usr$user_id, nm_df, stringsAsFactors = FALSE)
   names(nm_df)[-1] <- paste0("nm_", names(nm_df)[-1])
 
   dd1 <- cbind(txt_df, b64_df[-1])
   dd2 <- cbind(dsc_df, loc_df[-1])
-  dd2 <- cbind(dd2, nm_df[-1])
+  dd2 <- cbind(dd2, nm_df[-1], stringsAsFactors = FALSE)
   dd <- dplyr::left_join(dd1, dd2, by = "user_id")
 
   x <- x %>%

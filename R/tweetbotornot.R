@@ -73,7 +73,7 @@ botornot.data.frame <- function(x, fast = FALSE) {
   ## rearrange ot match uu
   p <- p[match(uu$user_id, x$user_id)]
   ## return as tibble
-  tibble::data_frame(
+  tibble::tibble(
     screen_name = uu$screen_name,
     user_id = uu$user_id,
     prob_bot = p)
