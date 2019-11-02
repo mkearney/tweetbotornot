@@ -103,7 +103,8 @@ extract_features_ytweets <- function(x) {
   x <- x[names(x) != "n"]
   dplyr::full_join(x, dd, by = "user_id") %>%
     dplyr::group_by(user_id) %>%
-    dplyr::summarise_all(mean, na.rm = TRUE)
+    dplyr::summarise_all(mean, na.rm = TRUE) %>%
+    dplyr::ungroup()
 }
 
 train_model <- function(data, n_trees = 1000) {
@@ -161,8 +162,71 @@ tf <- function(x) {
 
 
 
-
 extract_features_ntweets <- function(x) {
+  ## remove retweet text and counts
+  #x$text[x$is_retweet] <- NA_character_
+  #x$retweet_count[x$is_retweet] <- NA_integer_
+
+  ## remove user level duplicates
+  x_usr <- dplyr::filter(x, !duplicated(.data$user_id))
+
+  ## tweet features
+  txt_df <- tf(
+    dplyr::select(x, user_id = user_id, text = text))
+  txt_df <- cbind(user_id = x$user_id, txt_df, stringsAsFactors = FALSE)
+  names(txt_df)[-1] <- paste0("txt_", names(txt_df)[-1])
+
+  ## base64 version
+  b64_df <- tf(
+    dplyr::select(x, user_id = user_id, text = text))
+  b64_df <- cbind(user_id = x$user_id, b64_df, stringsAsFactors = FALSE)
+  names(b64_df)[-1] <- paste0("b64_", names(b64_df)[-1])
+
+  dsc_df <- tf(
+    dplyr::select(x_usr, user_id = user_id, text = description))
+  dsc_df <- cbind(user_id = x_usr$user_id, dsc_df, stringsAsFactors = FALSE)
+  names(dsc_df)[-1] <- paste0("dsc_", names(dsc_df)[-1])
+
+  loc_df <- tf(
+    dplyr::select(x_usr, user_id = user_id, text = location))
+  loc_df <- cbind(user_id = x_usr$user_id, loc_df)
+  names(loc_df)[-1] <- paste0("loc_", names(loc_df)[-1])
+
+  nm_df <- tf(
+    dplyr::select(x_usr, user_id = user_id, text = name))
+  nm_df <- cbind(user_id = x_usr$user_id, nm_df, stringsAsFactors = FALSE)
+  names(nm_df)[-1] <- paste0("nm_", names(nm_df)[-1])
+
+  dd1 <- cbind(txt_df, b64_df[-1])
+  dd2 <- cbind(dsc_df, loc_df[-1])
+  dd2 <- cbind(dd2, nm_df[-1], stringsAsFactors = FALSE)
+  dd <- dplyr::left_join(dd1, dd2, by = "user_id")
+
+  x <- x %>%
+    dplyr::group_by(user_id) %>%
+    dplyr::summarise(
+      favourites_count = max_(c(0, .data$favourites_count)),
+      verified = as.integer(.data$verified[1]),
+      years_on_twitter = as.numeric(
+        difftime(Sys.time(), .data$account_created_at[1], units = "days")) / 365,
+      statuses_count = max_(c(0, .data$statuses_count)),
+      followers_count = max_(c(0, .data$followers_count)),
+      friends_count = max_(c(0, .data$friends_count)),
+      listed_count = max_(c(0, .data$listed_count)),
+      tweets_to_followers = (.data$statuses_count + 1) /
+        (.data$followers_count + 1),
+      statuses_rate = (.data$statuses_count + 1) /
+        (.data$years_on_twitter + .001),
+      ff_ratio = (.data$followers_count + 1) /
+        (.data$friends_count + .data$followers_count + 1)
+    )
+  dplyr::full_join(x, dd, by = "user_id") %>%
+    dplyr::group_by(user_id) %>%
+    dplyr::summarise_all(mean, na.rm = TRUE) %>%
+    dplyr::ungroup()
+}
+
+extract_features_ntweetsog <- function(x) {
   ## remove user level duplicates
   x <- dplyr::filter(x, !duplicated(user_id))
   x <- dplyr::group_by(x, user_id)
