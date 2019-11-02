@@ -33,7 +33,8 @@ extract_features_ytweets <- function(x) {
 
   ## tweet features
   txt_df <- tf(
-    dplyr::select(x[!is.na(x$text), ], user_id = user_id, text = text))
+    dplyr::select(x[!is.na(x$text), ], user_id = user_id, text = text),
+    verbose = TRUE)
   txt_df <- cbind(user_id = x$user_id[!is.na(x$text)], txt_df, stringsAsFactors = FALSE)
   names(txt_df)[-1] <- paste0("txt_", names(txt_df)[-1])
 
@@ -154,8 +155,8 @@ classify_data <- function(x, model) {
 
 
 
-tf <- function(x) {
-  textfeatures::textfeatures(x, normalize = FALSE, word_dims = 0)
+tf <- function(x, sentiment = TRUE, verbose = FALSE) {
+  textfeatures::textfeatures(x, sentiment = sentiment, normalize = FALSE, word_dims = 0, verbose = verbose)
 }
 
 
@@ -172,28 +173,34 @@ extract_features_ntweets <- function(x) {
 
   ## tweet features
   txt_df <- tf(
-    dplyr::select(x, user_id = user_id, text = text))
+    dplyr::select(x, user_id = user_id, text = text),
+    verbose = TRUE,
+    sentiment = FALSE)
   txt_df <- cbind(user_id = x$user_id, txt_df, stringsAsFactors = FALSE)
   names(txt_df)[-1] <- paste0("txt_", names(txt_df)[-1])
 
   ## base64 version
   b64_df <- tf(
-    dplyr::select(x, user_id = user_id, text = text))
+    dplyr::select(x, user_id = user_id, text = text),
+    sentiment = FALSE)
   b64_df <- cbind(user_id = x$user_id, b64_df, stringsAsFactors = FALSE)
   names(b64_df)[-1] <- paste0("b64_", names(b64_df)[-1])
 
   dsc_df <- tf(
-    dplyr::select(x_usr, user_id = user_id, text = description))
+    dplyr::select(x_usr, user_id = user_id, text = description),
+    sentiment = FALSE)
   dsc_df <- cbind(user_id = x_usr$user_id, dsc_df, stringsAsFactors = FALSE)
   names(dsc_df)[-1] <- paste0("dsc_", names(dsc_df)[-1])
 
   loc_df <- tf(
-    dplyr::select(x_usr, user_id = user_id, text = location))
+    dplyr::select(x_usr, user_id = user_id, text = location),
+    sentiment = FALSE)
   loc_df <- cbind(user_id = x_usr$user_id, loc_df)
   names(loc_df)[-1] <- paste0("loc_", names(loc_df)[-1])
 
   nm_df <- tf(
-    dplyr::select(x_usr, user_id = user_id, text = name))
+    dplyr::select(x_usr, user_id = user_id, text = name),
+    sentiment = FALSE)
   nm_df <- cbind(user_id = x_usr$user_id, nm_df, stringsAsFactors = FALSE)
   names(nm_df)[-1] <- paste0("nm_", names(nm_df)[-1])
 
